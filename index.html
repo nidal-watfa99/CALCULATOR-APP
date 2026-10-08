@@ -1,0 +1,1432 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>الحاسبة الشاملة</title>
+<style>
+:root{--bg:#121212;--c:#1e1f20;--k:#2a2d2f;--t:#e8e8e8;--m:#8a8f93;--a:#ffd54f;--ak:#c2c9d0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=light]{--bg:#f4f4f2;--c:#fff;--k:#e8e9eb;--t:#1b1b1b;--m:#6b7075;--ak:#5a6670}
+:root[data-theme=amoled]{--bg:#000;--c:#0e0e0e;--k:#1a1a1a}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--t);font:16px system-ui,Tahoma,Arial,sans-serif}
+#app{max-width:520px;margin:auto;height:100%;display:flex;flex-direction:column;position:relative}
+.bar{display:flex;align-items:center;gap:8px;padding:12px 16px}.bar h1{flex:1;font-size:22px;margin:0}
+button{font:inherit;color:inherit;background:var(--k);border:0;border-radius:16px;padding:10px 14px;cursor:pointer}
+.sc{flex:1;overflow:auto;padding:0 16px 90px}.card{background:var(--c);border-radius:18px;padding:14px;margin:10px 0}
+input,select{width:100%;font:inherit;color:var(--t);background:var(--k);border:0;border-radius:14px;padding:13px;box-sizing:border-box}
+label{display:block;color:var(--m);font-size:14px;margin:12px 4px 4px}.hint{color:var(--m);font-size:13px;margin:8px 4px}
+.tl{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;cursor:pointer}.tl small{display:block;color:var(--m)}.tl span.n{flex:1}
+.ic{font-size:28px;width:40px;text-align:center}.st{color:var(--a);font-size:22px;padding:4px 8px}
+.fav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.fav div{text-align:center;padding:12px 4px;border-radius:14px;background:var(--k);cursor:pointer;font-size:14px}.fav b{display:block;font-size:30px}
+h3{color:var(--m);font-size:14px;font-weight:400;margin:18px 6px 4px}
+.fab{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:16px;width:56px;height:56px;border-radius:18px;background:var(--ak);color:#111;font-size:26px;padding:0}
+.res{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--k)}.res b{text-align:left;direction:ltr;word-break:break-all}
+.dsp{flex:1;direction:ltr;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;padding:16px;overflow:hidden;text-align:right}
+.ex{font-size:44px;word-break:break-all}.pv{font-size:24px;color:var(--m);min-height:30px}.mm{font-size:13px;color:var(--a);min-height:16px}
+.kp{direction:ltr;padding:8px 12px 14px}.g{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
+.g button{height:clamp(50px,8.6vh,70px);border-radius:36px;font-size:24px;padding:0}.g.s button{background:none;font-size:18px;height:40px}
+.g .o{background:#2e3538;color:var(--a)}:root[data-theme=light] .g .o{background:#d9dde0;color:#5a4a00}.g .eq{background:var(--ak);color:#111}.g .ac{background:#434c52}
+
+.live-btn{display:inline-flex;align-items:center;gap:6px;background:var(--k);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:1px;color:#0f0;border:1px solid rgba(0,255,100,.35);box-shadow:0 0 8px rgba(0,255,100,.25),inset 0 0 6px rgba(0,255,100,.08);cursor:default;user-select:none}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#0f0;box-shadow:0 0 6px #0f0,0 0 12px rgba(0,255,100,.6);animation:livePulse 1.6s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 6px #0f0,0 0 12px rgba(0,255,100,.6)}50%{opacity:.55;transform:scale(.85);box-shadow:0 0 3px #0f0,0 0 6px rgba(0,255,100,.3)}}
+.dev-name{font-size:11px;font-style:italic;color:#7af;text-shadow:0 0 6px rgba(100,160,255,.7),0 0 12px rgba(80,140,255,.35);animation:devPulse 2.4s ease-in-out infinite;white-space:nowrap;letter-spacing:.5px}
+@keyframes devPulse{0%,100%{opacity:1;text-shadow:0 0 6px rgba(100,160,255,.7),0 0 12px rgba(80,140,255,.35)}50%{opacity:.7;text-shadow:0 0 4px rgba(100,160,255,.4),0 0 8px rgba(80,140,255,.2)}}
+.warn-n{color:#4caf50}.warn-l{color:#ff9800}.warn-h{color:#ff5722}.warn-c{color:#f44336;font-weight:700}
+.badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:12px;margin-inline-start:6px}
+.badge-n{background:rgba(76,175,80,.2);color:#4caf50}.badge-l{background:rgba(255,152,0,.2);color:#ff9800}
+.badge-h{background:rgba(255,87,34,.2);color:#ff5722}.badge-c{background:rgba(244,67,54,.25);color:#f44336}
+.sci-card{background:var(--c);border-radius:14px;padding:12px;margin:8px 0;cursor:pointer;border:1px solid transparent}
+.sci-card:hover{border-color:var(--a)}.sci-card .sym{direction:ltr;font-family:ui-monospace,monospace;color:var(--a);font-size:15px}
+.lab-card{background:var(--c);border-radius:14px;padding:12px;margin:8px 0}
+.lab-card .abbr{direction:ltr;color:var(--a);font-weight:600}
+.disc{font-size:12px;color:var(--m);background:var(--k);border-radius:12px;padding:10px;margin:8px 0;line-height:1.5}
+.contact-card a{color:var(--a);text-decoration:none}
+.bar-right{display:flex;align-items:center;gap:8px;margin-inline-start:auto}
+
+.console-fab{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom,0px));left:16px;width:44px;height:44px;border-radius:14px;background:#1a2332;color:#7af;font-size:18px;padding:0;z-index:90;border:1px solid rgba(100,160,255,.35);box-shadow:0 0 10px rgba(80,140,255,.25);display:none}
+.console-fab.has-err{color:#f66;border-color:rgba(255,80,80,.5);box-shadow:0 0 10px rgba(255,60,60,.3);animation:livePulse 1.6s ease-in-out infinite}
+.console-panel{position:fixed;inset:auto 0 0 0;max-height:55%;background:var(--c);border-radius:18px 18px 0 0;z-index:100;display:none;flex-direction:column;box-shadow:0 -8px 32px rgba(0,0,0,.45);padding-bottom:env(safe-area-inset-bottom,0px)}
+.console-panel.open{display:flex}
+.console-hd{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--k)}
+.console-hd h2{flex:1;margin:0;font-size:16px}
+.console-body{flex:1;overflow:auto;padding:8px 12px;font:12px/1.45 ui-monospace,Menlo,Consolas,monospace;direction:ltr;text-align:left}
+.console-body .err-row{padding:8px;margin:6px 0;border-radius:10px;background:var(--k);border-inline-start:3px solid #f66}
+.console-body .err-row.warn{border-inline-start-color:#ff9800}
+.console-body .err-row.info{border-inline-start-color:#4caf50}
+.console-body .err-ts{color:var(--m);font-size:11px}
+.console-body .err-msg{color:#f88;word-break:break-word;margin-top:4px}
+.console-body .err-stack{color:var(--m);font-size:11px;margin-top:4px;white-space:pre-wrap;max-height:80px;overflow:auto}
+.dev-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.dev-grid button{font-size:13px;padding:12px 8px}
+.app-title{text-align:center;font-size:28px;font-weight:800;letter-spacing:.5px;line-height:1.3;padding:2px 12px 0;margin:0;user-select:none;
+background:linear-gradient(115deg,#7a5a08 0%,#c99700 14%,#ffd54f 28%,#fff8d6 38%,#ffd54f 48%,#b8860b 62%,#f5c518 78%,#fff2a8 88%,#7a5a08 100%);background-size:300% 300%;
+-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 6px rgba(255,200,40,.35));animation:goldShine 4s linear infinite}
+@keyframes goldShine{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+@media (prefers-reduced-motion:reduce){.app-title{animation:none}}
+.rate-status{font-size:12px;color:var(--m);margin:6px 0}
+.rate-status.ok{color:#4caf50}.rate-status.err{color:#f66}.rate-status.loading{color:var(--a)}
+</style><meta name="description" content="الحاسبة الشاملة | Smart Calculator — حاسبة وأدوات علمية ومالية وصحية"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png"><link rel="shortcut icon" href="favicon.ico"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#121212"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="الحاسبة الشاملة"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"></head><body><div id="app"></div><script>
+const Q=s=>document.querySelector(s),E=(t,c,h)=>{const e=document.createElement(t);c&&(e.className=c);h!=null&&(e.innerHTML=h);return e},A=Q('#app');
+const ST={g:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const nl=navigator.language||'ar',LGs=ST.g('lg','auto'),AR=LGs=='auto'?/^ar/i.test(nl):LGs=='ar',LC=(AR?'ar':'en')+'-u-nu-latn';document.documentElement.lang=AR?'ar':'en';document.documentElement.dir=AR?'rtl':'ltr';document.title=AR?'الحاسبة الشاملة':'Smart Calculator';
+let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;const b=Q('#pi');b&&(b.style.display='')});addEventListener('appinstalled',()=>{dp=null});
+function ins(){if(dp){dp.prompt();dp=null;const b=Q('#pi');b&&(b.style.display='none')}}
+const ap=()=>{const t=ST.g('th','dark');document.documentElement.dataset.theme=ST.g('auto',false)&&t!='amoled'?(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark'):t};ap();
+function grp(box,title,key,list,def){box.append(E('label',0,title));const d=E('div');d.style.cssText='display:flex;gap:8px';const f=()=>[...d.children].forEach((b,i)=>b.style.outline=ST.g(key,def)==list[i][0]?'2px solid var(--a)':'');list.forEach(([k,n])=>{const b=E('button',0,n);b.style.flex=1;b.onclick=()=>{ST.s(key,k);ap();f()};d.append(b)});box.append(d);f()}
+function tg(box,label,key,def){const l=E('label',0);l.style.cssText='display:flex;align-items:center;gap:10px;margin:14px 4px;color:var(--t)';const c=E('input');c.type='checkbox';c.style.width='auto';c.checked=ST.g(key,def);c.onchange=()=>{ST.s(key,c.checked);ap()};l.append(c,label);box.append(l)}
+function onb(s=1){A.innerHTML=`<div class=sc style="padding-top:30px"><div class=hint>مرحباً</div><h1>${s}. ${s==1?'اختر الواجهة':'اختر السمة'}</h1><div id=ob></div><button id=nx style="width:100%;background:var(--a);color:#111;margin-top:24px;padding:16px">متابعة</button><div class=hint style="text-align:center">${s} / 2</div></div>`;const b=Q('#ob');
+if(s==1){grp(b,'الواجهة','ui',[['simple','بسيط'],['classic','كلاسيكي'],['modern','حديث']],'classic');tg(b,'ذاكرة (تفعيل)','mo',true)}else{grp(b,'السمات','th',[['dark','افتراضي'],['light','أبيض'],['amoled','أموليد']],'dark');tg(b,'الوضع المظلم تلقائي (حسب النظام)','auto',false)}
+Q('#nx').onclick=()=>{if(s==1)onb(2);else{ST.s('ob',1);calc()}}}
+const P=s=>parseFloat(String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,]/g,'.')),ok=(...a)=>a.every(x=>typeof x=='number'&&isFinite(x)),
+fm=x=>!ok(x)?'—':x!=0&&(Math.abs(x)<1e-6||Math.abs(x)>=1e15)?x.toExponential(6).replace(/\.?0+e/,'e').replace('e+','e'):(+x.toPrecision(10)).toLocaleString('en',{maximumFractionDigits:8}),R=(l,v)=>[l,typeof v=='number'?fm(v):v],
+F=n=>n<0||n%1||n>170?NaN:[...Array(n)].reduce((a,_,i)=>a*(i+1),1),gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a),pi=Math.PI,
+NL=s=>String(s||'').split(/[\s,،;]+/).map(P).filter(isFinite),pr=(n,r)=>{let p=1;for(let i=0;i<r;i++)p*=n-i;return p},
+isP=n=>{if(n<2||n%1)return 0;for(let i=2;i*i<=n;i++)if(n%i==0)return 0;return 1},
+DS=d=>d.toLocaleDateString(LC,{weekday:'long',year:'numeric',month:'long',day:'numeric'}),
+DT=d=>d.toLocaleString(LC,{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}),
+ymd=(a,b)=>{if(a>b)[a,b]=[b,a];let y=b.getFullYear()-a.getFullYear(),m=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate();if(d<0){m--;d+=new Date(b.getFullYear(),b.getMonth(),0).getDate()}if(m<0){y--;m+=12}return[y,m,d]},
+YMD=a=>`${a[0]} سنة، ${a[1]} شهر، ${a[2]} يوم`;
+const T=[],M=(n,f,c,h)=>({n,f,c,h}),X=(id,cat,name,ic,modes,btn)=>T.push({id,cat,name,ic,modes,btn}),C=(id,cat,name,ic,conv)=>T.push({id,cat,name,ic,conv}),
+AL='الجبر',GE='علم الهندسة',UN='محولات الوحدات',FI='المعاملات المالية',HE='الصحة',DA='التاريخ والوقت',SC='العلوم والرياضيات',MD='المختبر الطبي',OT='أخرى',DV='أدوات المطوّر',MK='أسعار السوق';
+// الجبر
+X('pct',AL,'النسبة المئوية','🥧',[M('X% من Y',[['x','النسبة %'],['y','العدد']],v=>ok(v.x,v.y)&&[R('النتيجة',v.x*v.y/100)]),M('X كم % من Y',[['x','X'],['y','Y']],v=>ok(v.x,v.y)&&[R('النسبة %',v.x/v.y*100)]),M('نسبة التغير',[['x','من'],['y','إلى']],v=>ok(v.x,v.y)&&[R('التغير %',(v.y-v.x)/v.x*100),R('الفرق',v.y-v.x)]),M('زيادة / خصم',[['x','العدد'],['y','النسبة %'],['o','العملية','s',['زيادة','خصم']]],v=>ok(v.x,v.y)&&[R('الناتج',v.x*(1+(v.o?-1:1)*v.y/100)),R('قيمة النسبة',v.x*v.y/100)])]);
+X('avg',AL,'معدل','📈',[M('',[['l','الأعداد (افصل بينها بمسافة أو فاصلة)','t']],v=>{const a=NL(v.l);if(!a.length)return;const s=[...a].sort((x,y)=>x-y),n=a.length,sm=a.reduce((x,y)=>x+y,0);return[R('المعدل',sm/n),R('الوسيط',n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2),R('المجموع',sm),R('العدد',n),R('الأصغر',s[0]),R('الأكبر',s[n-1])]})]);
+X('prop',AL,'تناسب','🔢',[M('',[['a','أ'],['b','ب'],['c','ج'],['d','د']],v=>{const k=['a','b','c','d'].filter(i=>!ok(v[i]));if(k.length!=1)return;let{a,b,c,d}=v;const i=k[0];if(i=='a')a=b*c/d;if(i=='b')b=a*d/c;if(i=='c')c=a*d/b;if(i=='d')d=b*c/a;return[R('القيمة المجهولة',{a,b,c,d}[i]),R('التناسب',`${fm(a)} : ${fm(b)} = ${fm(c)} : ${fm(d)}`)]},'أ : ب = ج : د — اترك خانة واحدة فارغة')]);
+X('rat',AL,'نسبة','🔳',[M('',[['a','القيمة الأولى'],['b','القيمة الثانية']],v=>{if(!ok(v.a,v.b)||!v.b)return;const g=Number.isInteger(v.a)&&Number.isInteger(v.b)?gcd(v.a,v.b)||1:1;return[R('النسبة المبسطة',`${fm(v.a/g)} : ${fm(v.b/g)}`),R('أ ÷ ب',v.a/v.b),R('أ من المجموع %',v.a/(v.a+v.b)*100)]})]);
+X('eqn',AL,'المعادلات','𝑥²',[M('خطية: ax + b = 0',[['a','a'],['b','b']],v=>ok(v.a,v.b)&&(v.a?[R('x',-v.b/v.a)]:[R('النتيجة','لا حل وحيد')])),M('تربيعية: ax² + bx + c = 0',[['a','a'],['b','b'],['c','c']],v=>{if(!ok(v.a,v.b,v.c))return;const{a,b,c}=v;if(!a)return b?[R('x',-c/b)]:[R('النتيجة','لا حل')];const D=b*b-4*a*c;if(D>=0)return[R('المميز Δ',D),R('x₁',(-b+Math.sqrt(D))/2/a),R('x₂',(-b-Math.sqrt(D))/2/a)];const re=-b/2/a,im=Math.sqrt(-D)/2/Math.abs(a);return[R('المميز Δ',D),R('الجذران (مركبان)',`${fm(re)} ± ${fm(im)}i`)]}),M('نظام معادلتين',[['a1','a₁ (x)'],['b1','b₁ (y)'],['c1','c₁'],['a2','a₂ (x)'],['b2','b₂ (y)'],['c2','c₂']],v=>{if(!ok(v.a1,v.b1,v.c1,v.a2,v.b2,v.c2))return;const d=v.a1*v.b2-v.a2*v.b1;return d?[R('x',(v.c1*v.b2-v.c2*v.b1)/d),R('y',(v.a1*v.c2-v.a2*v.c1)/d)]:[R('النتيجة','لا يوجد حل وحيد')]},'a₁x + b₁y = c₁ ، a₂x + b₂y = c₂')]);
+X('gcd',AL,'ع.م.أ. / م.م.أ','🧱',[M('',[['l','الأعداد الصحيحة (افصل بمسافة)','t']],v=>{const a=NL(v.l).filter(Number.isInteger).map(Math.abs);if(a.length<2||a.includes(0))return;return[R('ع.م.أ (القاسم المشترك الأكبر)',a.reduce(gcd)),R('م.م.أ (المضاعف المشترك الأصغر)',a.reduce((x,y)=>x/gcd(x,y)*y))]})]);
+X('cmb',AL,'التوافيق','🧩',[M('',[['n','n (العدد الكلي)'],['r','r (المختار)']],v=>ok(v.n,v.r)&&v.r<=v.n&&v.n%1==0&&v.r%1==0&&v.n>=0&&[R('التوافيق C(n,r)',pr(v.n,v.r)/pr(v.r,v.r)),R('التباديل P(n,r)',pr(v.n,v.r)),R('n!',F(v.n))])]);
+X('prm',AL,'فاحص الأعداد الأولية','💎',[M('',[['n','العدد']],v=>{const n=v.n;if(!ok(n)||n%1||n<1||n>1e12)return;const f=[];let m=n;for(let i=2;i*i<=m;i++)while(m%i==0){f.push(i);m/=i}if(m>1&&n>1)f.push(m);let nx=n+1;while(!isP(nx))nx++;return[R('أولي؟',isP(n)?'نعم ✅':'لا ❌'),R('العوامل الأولية',n==1?'1':f.join(' × ')),R('الأولي التالي',nx)]})]);
+X('rnd',AL,'مولد الأرقام','🎱',[M('',[['a','من'],['b','إلى'],['k','عدد الأرقام'],['t','النوع','s',['صحيحة','عشرية']]],v=>{if(!ok(v.a,v.b))return;const k=ok(v.k)?Math.min(Math.max(1,v.k|0),100):1,lo=Math.min(v.a,v.b),hi=Math.max(v.a,v.b),o=[];for(let i=0;i<k;i++)o.push(v.t?+(lo+Math.random()*(hi-lo)).toFixed(4):Math.floor(Math.random()*(Math.floor(hi)-Math.ceil(lo)+1))+Math.ceil(lo));return[R('الأرقام',o.join(' ، '))]})],'🎲 توليد');
+// الهندسة
+X('shp',GE,'الأشكال','🟫',[M('مربع',[['a','طول الضلع']],v=>ok(v.a)&&[R('المساحة',v.a**2),R('المحيط',4*v.a),R('القطر',v.a*Math.SQRT2)]),M('مستطيل',[['a','الطول'],['b','العرض']],v=>ok(v.a,v.b)&&[R('المساحة',v.a*v.b),R('المحيط',2*(v.a+v.b)),R('القطر',Math.hypot(v.a,v.b))]),M('دائرة',[['r','نصف القطر']],v=>ok(v.r)&&[R('المساحة',pi*v.r**2),R('المحيط',2*pi*v.r),R('القطر',2*v.r)]),M('مثلث (قاعدة وارتفاع)',[['b','القاعدة'],['h','الارتفاع']],v=>ok(v.b,v.h)&&[R('المساحة',v.b*v.h/2)]),M('مثلث (3 أضلاع)',[['a','الضلع أ'],['b','الضلع ب'],['c','الضلع ج']],v=>{if(!ok(v.a,v.b,v.c))return;const s=(v.a+v.b+v.c)/2,q=s*(s-v.a)*(s-v.b)*(s-v.c);return q<=0?[R('خطأ','الأضلاع لا تكوّن مثلثاً')]:[R('المساحة',Math.sqrt(q)),R('المحيط',2*s)]}),M('متوازي أضلاع',[['b','القاعدة'],['h','الارتفاع'],['s','الضلع المائل (اختياري)']],v=>ok(v.b,v.h)&&[R('المساحة',v.b*v.h),...(ok(v.s)?[R('المحيط',2*(v.b+v.s))]:[])]),M('شبه منحرف',[['a','القاعدة 1'],['b','القاعدة 2'],['h','الارتفاع']],v=>ok(v.a,v.b,v.h)&&[R('المساحة',(v.a+v.b)/2*v.h)]),M('معين',[['p','القطر 1'],['q','القطر 2']],v=>ok(v.p,v.q)&&[R('المساحة',v.p*v.q/2),R('طول الضلع',Math.hypot(v.p/2,v.q/2)),R('المحيط',4*Math.hypot(v.p/2,v.q/2))]),M('قطع ناقص',[['a','نصف المحور الكبير'],['b','نصف المحور الصغير']],v=>ok(v.a,v.b)&&[R('المساحة',pi*v.a*v.b),R('المحيط (تقريبي)',pi*(3*(v.a+v.b)-Math.sqrt((3*v.a+v.b)*(v.a+3*v.b))))]),M('مضلع منتظم',[['n','عدد الأضلاع'],['a','طول الضلع']],v=>ok(v.n,v.a)&&v.n>=3&&[R('المساحة',v.n*v.a*v.a/(4*Math.tan(pi/v.n))),R('المحيط',v.n*v.a)])]);
+X('sol',GE,'الأجسام','🧊',[M('مكعب',[['a','طول الضلع']],v=>ok(v.a)&&[R('الحجم',v.a**3),R('المساحة الكلية',6*v.a**2),R('القطر',v.a*Math.sqrt(3))]),M('متوازي مستطيلات',[['l','الطول'],['w','العرض'],['h','الارتفاع']],v=>ok(v.l,v.w,v.h)&&[R('الحجم',v.l*v.w*v.h),R('المساحة الكلية',2*(v.l*v.w+v.l*v.h+v.w*v.h)),R('القطر',Math.sqrt(v.l**2+v.w**2+v.h**2))]),M('كرة',[['r','نصف القطر']],v=>ok(v.r)&&[R('الحجم',4/3*pi*v.r**3),R('المساحة',4*pi*v.r**2)]),M('أسطوانة',[['r','نصف القطر'],['h','الارتفاع']],v=>ok(v.r,v.h)&&[R('الحجم',pi*v.r**2*v.h),R('المساحة الجانبية',2*pi*v.r*v.h),R('المساحة الكلية',2*pi*v.r*(v.r+v.h))]),M('مخروط',[['r','نصف القطر'],['h','الارتفاع']],v=>{if(!ok(v.r,v.h))return;const l=Math.hypot(v.r,v.h);return[R('الحجم',pi*v.r**2*v.h/3),R('الارتفاع المائل',l),R('المساحة الجانبية',pi*v.r*l),R('المساحة الكلية',pi*v.r*(v.r+l))]}),M('هرم قاعدته مربعة',[['a','ضلع القاعدة'],['h','الارتفاع']],v=>{if(!ok(v.a,v.h))return;const l=Math.hypot(v.h,v.a/2);return[R('الحجم',v.a**2*v.h/3),R('المساحة الجانبية',2*v.a*l),R('المساحة الكلية',v.a**2+2*v.a*l)]})]);
+// المحولات
+C('acc',UN,'التسارع','🏎',[['م/ث²',1],['g (الجاذبية)',9.80665],['قدم/ث²',.3048],['غال (Gal)',.01]]);
+C('ang',UN,'الزاوية','📐',[['درجة',1],['راديان',180/pi],['غراد',.9],['دورة',360],['دقيقة قوسية',1/60],['ثانية قوسية',1/3600]]);
+C('are',UN,'مساحة','⬛',[['متر²',1],['كم²',1e6],['هكتار',1e4],['دونم',1000],['فدان (acre)',4046.8564],['سم²',1e-4],['ملم²',1e-6],['قدم²',.09290304],['إنش²',6.4516e-4],['ياردة²',.83612736],['ميل²',2589988.11]]);
+C('ckg',UN,'الطهي','🍳',[['مل',1],['لتر',1000],['ملعقة صغيرة',4.92892],['ملعقة كبيرة',14.7868],['كوب أمريكي',236.588],['كوب متري',250],['أوقية سائلة',29.5735],['باينت',473.176],['كوارت',946.353]]);
+C('sto',UN,'تخزين البيانات','💾',[['بت',.125],['بايت',1],['كيلوبايت KB',1024],['ميغابايت MB',1048576],['غيغابايت GB',2**30],['تيرابايت TB',2**40],['بيتابايت PB',2**50]]);
+C('trf',UN,'نقل البيانات','☁️',[['bit/s',1],['Kbit/s',1e3],['Mbit/s',1e6],['Gbit/s',1e9],['Tbit/s',1e12],['B/s',8],['KB/s',8e3],['MB/s',8e6],['GB/s',8e9]]);
+C('ene',UN,'الطاقة','🔋',[['جول',1],['كيلوجول',1e3],['سعرة (cal)',4.184],['كيلوسعرة (kcal)',4184],['واط ساعة',3600],['كيلوواط ساعة',3.6e6],['BTU',1055.056],['إلكترون فولت',1.602177e-19]]);
+C('frc',UN,'قوة','💪',[['نيوتن',1],['كيلونيوتن',1e3],['داين',1e-5],['كغ قوة',9.80665],['رطل قوة',4.448222]]);
+C('fue',UN,'الوقود','⛽',[['لتر / 100 كم',[x=>x,b=>b]],['كم / لتر',[x=>100/x,b=>100/b]],['ميل / غالون (أمريكي)',[x=>235.215/x,b=>235.215/b]],['ميل / غالون (بريطاني)',[x=>282.481/x,b=>282.481/b]]]);
+C('len',UN,'الطول','📏',[['متر',1],['كيلومتر',1e3],['سنتيمتر',.01],['ملليمتر',.001],['ميكرومتر',1e-6],['ميل',1609.344],['ياردة',.9144],['قدم',.3048],['إنش',.0254],['ميل بحري',1852]]);
+X('bas',UN,'الأساس العددي','🖥',[M('',[['t','الرقم','t'],['b','الأساس','s',['ثنائي (2)','ثماني (8)','عشري (10)','سداسي عشري (16)']]],v=>{const b=[2,8,10,16][v.b],s=v.t.trim().toLowerCase();if(!s)return;const n=parseInt(s,b);if(isNaN(n)||n.toString(b)!=s.replace(/^0+(?=.)/,''))return[R('خطأ','رقم غير صالح لهذا الأساس')];return[2,8,10,16].map(k=>R('الأساس '+k,n.toString(k).toUpperCase()))})]);
+C('pwr',UN,'القدرة','🚜',[['واط',1],['كيلوواط',1e3],['ميغاواط',1e6],['حصان ميكانيكي',745.7],['حصان متري',735.49875],['BTU/ساعة',.29307107],['سعرة/ثانية',4.184]]);
+C('prs',UN,'الضغط','🎚',[['باسكال',1],['كيلوباسكال',1e3],['ميغاباسكال',1e6],['بار',1e5],['ضغط جوي (atm)',101325],['PSI',6894.757],['mmHg',133.322],['تور',133.322]]);
+X('rng',UN,'مقاس الخاتم','💍',[M('',[['t','نوع المدخل','s',['القطر الداخلي (مم)','المحيط (مم)','مقاس US']],['x','القيمة']],v=>{if(!ok(v.x))return;const d=[v.x,v.x/pi,11.63+.8128*v.x][v.t];return[R('القطر (مم)',d),R('المحيط (مم) / مقاس EU',d*pi),R('مقاس US',(d-11.63)/.8128)]})]);
+const RM=[[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']],n2r=n=>RM.reduce((s,[v,r])=>{while(n>=v){s+=r;n-=v}return s},''),r2n=s=>{let n=0;s=s.toUpperCase();RM.forEach(([v,r])=>{while(s.startsWith(r)){n+=v;s=s.slice(r.length)}});return s?NaN:n};
+X('rom',UN,'الأرقام الرومانية','🏛',[M('',[['t','رقم عادي أو روماني','t']],v=>{const x=v.t.trim();if(!x)return;if(/^[IVXLCDM]+$/i.test(x)){const n=r2n(x);return[isNaN(n)?R('خطأ','رقم روماني غير صحيح'):R('بالأرقام العادية',n)]}const n=P(x);return[n>=1&&n<4000&&n%1==0?R('بالرومانية',n2r(n)):R('خطأ','أدخل عدداً صحيحاً من 1 إلى 3999')]})]);
+X('shoe',UN,'مقاس الحذاء','👟',[M('',[['t','النظام','s',['EU أوروبي','UK بريطاني','US رجالي','US نسائي','طول القدم (سم)']],['x','المقاس']],v=>{if(!ok(v.x))return;const L=[v.x/1.5-1.5,(v.x+25)/3*2.54-1.5,(v.x+24)/3*2.54-1.5,(v.x+22.5)/3*2.54-1.5,v.x][v.t],uk=(L+1.5)/2.54*3-25;return[R('EU',(L+1.5)*1.5),R('UK',uk),R('US رجالي',uk+1),R('US نسائي',uk+2.5),R('طول القدم (سم)',L)]},'القيم تقريبية وتختلف بين الشركات')]);
+C('spd',UN,'السرعة','🚗',[['م/ث',1],['كم/س',1/3.6],['ميل/س',.44704],['عقدة',.514444],['قدم/ث',.3048],['ماخ',340.29]]);
+C('tmp',UN,'درجة الحرارة','🌡',[['مئوية °C',[x=>x,b=>b]],['فهرنهايت °F',[x=>(x-32)/1.8,b=>b*1.8+32]],['كلفن K',[x=>x-273.15,b=>b+273.15]],['رانكين °R',[x=>x/1.8-273.15,b=>(b+273.15)*1.8]]]);
+C('tim',UN,'وقت','🕐',[['ثانية',1],['ملي ثانية',.001],['دقيقة',60],['ساعة',3600],['يوم',86400],['أسبوع',604800],['شهر (30.44 يوم)',2629746],['سنة',31556952],['عقد',315569520]]);
+C('trq',UN,'عزم الدوران','🔧',[['نيوتن·متر',1],['كغ قوة·متر',9.80665],['رطل قدم',1.355818],['رطل إنش',.112985],['كيلونيوتن·متر',1e3]]);
+C('vol',UN,'الحجم','🥛',[['لتر',1],['مل',.001],['م³',1e3],['سم³',.001],['غالون أمريكي',3.785411784],['غالون بريطاني',4.54609],['كوب أمريكي',.2365882],['أوقية سائلة',.0295735],['ملعقة كبيرة',.0147868],['ملعقة صغيرة',.0049289],['قدم³',28.316847],['إنش³',.016387]]);
+C('flw',UN,'التدفق الحجمي','🚰',[['لتر/ثانية',1],['لتر/دقيقة',1/60],['لتر/ساعة',1/3600],['م³/ثانية',1e3],['م³/ساعة',1/3.6],['غالون/دقيقة',.0630902],['قدم³/ثانية',28.316847]]);
+C('wgt',UN,'الوزن','⚖️',[['كيلوغرام',1],['غرام',.001],['ملليغرام',1e-6],['طن',1e3],['رطل',.45359237],['أوقية',.028349523],['ستون',6.35029318],['قيراط',2e-4],['ميكروغرام',1e-9],['طن أمريكي (short)',907.18474],['طن بريطاني (long)',1016.0469088],['أوقية تروي',.0311034768],['غرين (grain)',6.479891e-5]]);
+// مالية
+const CUR=[['دولار أمريكي',1,'USD'],['يورو',.92,'EUR'],['جنيه إسترليني',.79,'GBP'],['ريال سعودي',3.75,'SAR'],['درهم إماراتي',3.6725,'AED'],['دينار كويتي',.307,'KWD'],['ريال قطري',3.64,'QAR'],['دينار بحريني',.376,'BHD'],['ريال عماني',.385,'OMR'],['دينار أردني',.709,'JOD'],['جنيه مصري',48,'EGP'],['دينار عراقي',1310,'IQD'],['ليرة تركية',41,'TRY'],['درهم مغربي',9.7,'MAD'],['دينار جزائري',133,'DZD'],['دينار تونسي',3.1,'TND'],['ليرة لبنانية',89500,'LBP'],['ليرة سورية',13000,'SYP'],['ين ياباني',148,'JPY'],['يوان صيني',7.1,'CNY'],['روبية هندية',83.5,'INR'],['فرنك سويسري',.88,'CHF'],['دولار كندي',1.36,'CAD'],['دولار أسترالي',1.52,'AUD']];
+T.push({id:'cur',cat:FI,name:'تحويل العملات',ic:'💵',conv:[]});
+
+// ===== نظام تتبع الأخطاء (Developer Console) =====
+const ERR_LOG=[];
+const MAX_ERR=80;
+function pushErr(type,msg,stack){
+  const e={t:Date.now(),type:type||'error',msg:String(msg||''),stack:stack?String(stack).slice(0,800):''};
+  ERR_LOG.unshift(e);if(ERR_LOG.length>MAX_ERR)ERR_LOG.pop();
+  try{ST.s('errlog',ERR_LOG.slice(0,40))}catch(x){}
+  updateConsoleBadge();
+}
+try{const saved=ST.g('errlog',[]);if(Array.isArray(saved))saved.forEach(e=>ERR_LOG.push(e))}catch(x){}
+addEventListener('error',ev=>{pushErr('error',ev.message||ev.error||'Error',ev.error&&ev.error.stack);});
+addEventListener('unhandledrejection',ev=>{const r=ev.reason;pushErr('error',r&&r.message?r.message:String(r),r&&r.stack);});
+const _origErr=console.error.bind(console);
+console.error=function(...a){try{pushErr('error',a.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(' '))}catch(x){}_origErr(...a)};
+const _origWarn=console.warn.bind(console);
+console.warn=function(...a){try{pushErr('warn',a.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(' '))}catch(x){}_origWarn(...a)};
+
+function updateConsoleBadge(){
+  const b=Q('#cfab');if(!b)return;
+  const show=ST.g('showConsole',false);
+  b.style.display=show?'flex':'none';
+  const has=ERR_LOG.some(e=>e.type==='error');
+  b.classList.toggle('has-err',has);
+  b.title=has?L('أخطاء مسجّلة')+' ('+ERR_LOG.filter(e=>e.type==='error').length+')':L('وحدة التحكم');
+}
+function ensureConsoleUI(){
+  if(Q('#cpanel'))return;
+  const fab=E('button','console-fab','🛠');fab.id='cfab';fab.onclick=()=>toggleConsole();
+  document.body.append(fab);
+  const panel=E('div','console-panel');panel.id='cpanel';
+  panel.innerHTML=`<div class="console-hd"><h2>🛠 ${L('وحدة التحكم')}</h2><button id=cclr type="button">${L('مسح')}</button><button id=ccls type="button">✕</button></div><div class="console-body" id=cbody></div>`;
+  document.body.append(panel);
+  Q('#ccls').onclick=()=>toggleConsole(false);
+  Q('#cclr').onclick=()=>{ERR_LOG.length=0;ST.s('errlog',[]);renderConsole();updateConsoleBadge()};
+  updateConsoleBadge();
+}
+function toggleConsole(force){
+  ensureConsoleUI();
+  const p=Q('#cpanel');
+  const open=force===undefined?!p.classList.contains('open'):!!force;
+  p.classList.toggle('open',open);
+  if(open)renderConsole();
+}
+function renderConsole(){
+  const b=Q('#cbody');if(!b)return;
+  if(!ERR_LOG.length){b.innerHTML='<div style="color:var(--m);padding:16px;text-align:center">'+L('لا توجد سجلات')+'</div>';return}
+  b.innerHTML=ERR_LOG.map(e=>{
+    const d=new Date(e.t);
+    const ts=d.toLocaleString(LC,{hour12:false});
+    const cls=e.type==='warn'?'warn':e.type==='info'?'info':'';
+    return `<div class="err-row ${cls}"><div class="err-ts">[${ts}] ${e.type.toUpperCase()}</div><div class="err-msg">${escHtml(e.msg)}</div>${e.stack?`<div class="err-stack">${escHtml(e.stack)}</div>`:''}</div>`;
+  }).join('');
+}
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function logInfo(msg){pushErr('info',msg);};
+
+// ===== جلب أسعار الصرف من مصدر حي (Frankfurter/ECB + fallback) =====
+// Frankfurter.app مبني على بيانات البنك المركزي الأوروبي (ECB) — مجاني بدون مفتاح
+// open.er-api.com كاحتياطي لتغطية عملات إضافية
+async function fetchLiveRates(){
+  const codes=CUR.map(x=>x[2]).filter(c=>c&&c!=='USD');
+  let rates={}, source='', date='';
+  // 1) محاولة Frankfurter (ECB)
+  try{
+    const url='https://api.frankfurter.app/latest?from=USD&to='+codes.join(',');
+    const res=await fetch(url,{cache:'no-store'});
+    if(!res.ok)throw new Error('Frankfurter HTTP '+res.status);
+    const data=await res.json();
+    if(data&&data.rates){
+      rates={...data.rates};source='Frankfurter (ECB)';date=data.date||'';
+      logInfo('Frankfurter rates OK: '+Object.keys(data.rates).length+' currencies, date '+date);
+    }
+  }catch(e){
+    pushErr('warn','Frankfurter: '+(e.message||e));
+  }
+  // 2) احتياطي: open.er-api.com لتغطية العملات الناقصة
+  const missing=codes.filter(c=>!rates[c]);
+  if(missing.length){
+    try{
+      const res=await fetch('https://open.er-api.com/v6/latest/USD',{cache:'no-store'});
+      if(!res.ok)throw new Error('open.er-api HTTP '+res.status);
+      const data=await res.json();
+      if(data&&data.rates){
+        missing.forEach(c=>{if(data.rates[c])rates[c]=data.rates[c]});
+        if(!source){source='ExchangeRate-API';date=data.time_last_update_utc||''}
+        else source+=' + ExchangeRate-API (fill)';
+        logInfo('open.er-api fill: '+missing.filter(c=>rates[c]).length+'/'+missing.length);
+      }
+    }catch(e){
+      pushErr('warn','open.er-api: '+(e.message||e));
+    }
+  }
+  if(!Object.keys(rates).length)throw new Error(L('تعذر جلب الأسعار من الشبكة'));
+  // حفظ: الاسم العربي → السعر مقابل 1 USD
+  const stored=ST.g('rt',{});
+  CUR.forEach(([name,def,code])=>{
+    if(code==='USD'){stored[name]=1;return}
+    if(rates[code]>0)stored[name]=rates[code];
+  });
+  ST.s('rt',stored);
+  ST.s('rtMeta',{source,date,at:Date.now()});
+  return {rates,source,date,stored};
+}
+
+X('upr',FI,'سعر الوحدة','🏷',[M('',[['p1','سعر المنتج 1'],['q1','الكمية 1'],['p2','سعر المنتج 2 (اختياري)'],['q2','الكمية 2']],v=>{if(!ok(v.p1,v.q1)||!v.q1)return;const a=v.p1/v.q1,o=[R('سعر وحدة المنتج 1',a)];if(ok(v.p2,v.q2)&&v.q2){const b=v.p2/v.q2;o.push(R('سعر وحدة المنتج 2',b),R('الأوفر',a==b?'متساويان':a<b?'المنتج 1 ✅':'المنتج 2 ✅'))}return o})]);
+X('tax',FI,'ضريبة المبيعات','✂️',[M('إضافة الضريبة',[['a','المبلغ قبل الضريبة'],['r','نسبة الضريبة %']],v=>ok(v.a,v.r)&&[R('الضريبة',v.a*v.r/100),R('الإجمالي',v.a*(1+v.r/100))]),M('استخراج الضريبة من الإجمالي',[['a','المبلغ شامل الضريبة'],['r','نسبة الضريبة %']],v=>ok(v.a,v.r)&&[R('المبلغ قبل الضريبة',v.a/(1+v.r/100)),R('الضريبة',v.a-v.a/(1+v.r/100))])]);
+X('tip',FI,'الإكرامية','🫙',[M('',[['b','الفاتورة'],['p','الإكرامية %'],['n','عدد الأشخاص']],v=>{if(!ok(v.b,v.p))return;const n=ok(v.n)&&v.n>0?v.n:1,t=v.b*v.p/100;return[R('الإكرامية',t),R('الإجمالي',v.b+t),R('حصة كل شخص',(v.b+t)/n)]})]);
+X('loan',FI,'القرض','🏠',[M('',[['p','مبلغ القرض'],['r','الفائدة السنوية %'],['y','المدة'],['u','وحدة المدة','s',['سنوات','شهور']]],v=>{if(!ok(v.p,v.r,v.y)||v.y<=0)return;const n=v.u?v.y:v.y*12,i=v.r/1200,m=i?v.p*i/(1-(1+i)**-n):v.p/n;return[R('القسط الشهري',m),R('إجمالي المدفوع',m*n),R('إجمالي الفائدة',m*n-v.p)]})]);
+const IF=[['p','مبلغ الإيداع'],['r','الفائدة السنوية %'],['y','المدة'],['u','وحدة المدة','s',['سنوات','شهور','أيام']]],yr=v=>v.y*[1,1/12,1/365][v.u];
+X('int',FI,'الفائدة','🐷',[M('بسيطة',IF,v=>ok(v.p,v.r,v.y)&&[R('القيمة النهائية',v.p*(1+v.r/100*yr(v))),R('الفائدة',v.p*v.r/100*yr(v))]),M('مركبة سنوياً',IF,v=>ok(v.p,v.r,v.y)&&[R('القيمة النهائية',v.p*(1+v.r/100)**yr(v)),R('الفائدة',v.p*((1+v.r/100)**yr(v)-1))]),M('مركبة شهرياً',IF,v=>ok(v.p,v.r,v.y)&&[R('القيمة النهائية',v.p*(1+v.r/1200)**(12*yr(v))),R('الفائدة',v.p*((1+v.r/1200)**(12*yr(v))-1))])]);
+// صحة
+const bc=b=>b<18.5?'نحافة':b<25?'وزن طبيعي':b<30?'زيادة وزن':'سمنة';
+X('bmi',HE,'مؤشر كتلة الجسم','⚖',[M('متري (سم، كغ)',[['h','الارتفاع (سم)'],['w','الوزن (كغ)']],v=>{if(!ok(v.h,v.w)||v.h<=0)return;const b=v.w/(v.h/100)**2;return[R('مؤشر كتلة الجسم',b),R('التصنيف',bc(b))]},'لشخص بالغ يبلغ 18 عاماً فأكثر'),M('إمبراطوري (إنش، رطل)',[['h','الارتفاع (إنش)'],['w','الوزن (رطل)']],v=>{if(!ok(v.h,v.w)||v.h<=0)return;const b=703*v.w/v.h**2;return[R('مؤشر كتلة الجسم',b),R('التصنيف',bc(b))]})]);
+X('cal',HE,'حرق السعرات الحرارية','🥤',[M('',[['a','العمر'],['s','الجنس','s',['ذكر','أنثى']],['h','الارتفاع (سم)'],['w','الوزن (كغ)'],['k','نمط الحياة','s',['خامل (بلا رياضة)','نشاط خفيف','نشاط متوسط','نشيط','نشيط جداً']]],v=>{if(!ok(v.a,v.h,v.w))return;const b=10*v.w+6.25*v.h-5*v.a+(v.s?-161:5);return[R('معدل الحرق الأساسي (kcal)',b),R('السعرات المحروقة يومياً (kcal)',b*[1.2,1.375,1.55,1.725,1.9][v.k])]},'معادلة Mifflin-St Jeor')]);
+X('fat',HE,'دهون الجسم','🫃',[M('حسب مؤشر الكتلة',[['a','العمر'],['s','الجنس','s',['ذكر','أنثى']],['h','الارتفاع (سم)'],['w','الوزن (كغ)']],v=>{if(!ok(v.a,v.h,v.w)||v.h<=0)return;const b=v.w/(v.h/100)**2;return[R('نسبة الدهون %',1.2*b+.23*v.a-10.8*(v.s?0:1)-5.4)]}),M('حسب محيط الجسم (البحرية)',[['s','الجنس','s',['ذكر','أنثى']],['h','الارتفاع (سم)'],['n','محيط الرقبة (سم)'],['x','محيط الخصر (سم)'],['i','محيط الورك (سم) — للإناث']],v=>{if(!ok(v.h,v.n,v.x))return;let r;if(!v.s){if(v.x<=v.n)return;r=495/(1.0324-.19077*Math.log10(v.x-v.n)+.15456*Math.log10(v.h))-450}else{if(!ok(v.i)||v.x+v.i<=v.n)return;r=495/(1.29579-.35004*Math.log10(v.x+v.i-v.n)+.221*Math.log10(v.h))-450}return[R('نسبة الدهون %',r)]})]);
+// تاريخ
+X('age',DA,'حاسبة العمر','🎂',[M('',[['d','تاريخ الميلاد','d']],v=>{const b=v.d;if(!b||isNaN(b))return;const t=new Date(),n=new Date(t.getFullYear(),t.getMonth(),t.getDate());if(b>n)return[R('خطأ','التاريخ في المستقبل')];const nb=new Date(n.getFullYear(),b.getMonth(),b.getDate());if(nb<n)nb.setFullYear(n.getFullYear()+1);return[R('العمر الحالي',YMD(ymd(b,n))),R('مجموع الأيام',Math.round((n-b)/864e5)),R('عيد الميلاد القادم',DS(nb)),R('متبقٍ (يوم)',Math.round((nb-n)/864e5))]})]);
+X('dad',DA,'الجمع والطرح','🕒',[M('',[['s','التاريخ المبدئي','dt'],['o','العملية','s',['جمع (+)','طرح (−)']],['n','المقدار'],['u','الوحدة','s',['أيام','أسابيع','شهور','سنوات','ساعات','دقائق']]],v=>{if(!v.s||isNaN(v.s)||!ok(v.n))return;const d=new Date(v.s),n=v.n*(v.o?-1:1),u=v.u;if(u==0)d.setDate(d.getDate()+n);else if(u==1)d.setDate(d.getDate()+7*n);else if(u==2)d.setMonth(d.getMonth()+n);else if(u==3)d.setFullYear(d.getFullYear()+n);else d.setTime(d.getTime()+n*(u==4?36e5:6e4));return[R('النتيجة',DT(d))]},'إضافة أو طرح فترة زمنية من التاريخ الأولي')]);
+X('gap',DA,'الفاصل الزمني','📅',[M('',[['a','تاريخ البدء','dt'],['b','تاريخ الانتهاء','dt']],v=>{if(!v.a||!v.b||isNaN(v.a)||isNaN(v.b))return;const ms=Math.abs(v.b-v.a);return[R('المدة',YMD(ymd(v.a,v.b))),R('أيام',ms/864e5),R('أسابيع',ms/6048e5),R('ساعات',ms/36e5),R('دقائق',ms/6e4)]})]);
+// أخرى
+X('dst',OT,'المسافة المقطوعة','🛣',[M('',[['d','مسافة'],['ud','وحدة المسافة','s',['كيلومتر','ميل']],['c','الاستهلاك'],['uc','وحدة الاستهلاك','s',['لتر / 100 كم','كم / لتر','ميل / غالون (أمريكي)']],['q','كمية الوقود'],['uq','وحدة الكمية','s',['لتر','غالون (أمريكي)']]],v=>{const dk=[1,1.609344][v.ud],qk=[1,3.785411784][v.uq],cv=[x=>x,x=>100/x,x=>235.215/x][v.uc],k=['d','c','q'].filter(i=>!ok(v[i]));if(k.length!=1)return;const d=v.d*dk,c=cv(v.c),q=v.q*qk;return[k[0]=='d'?R('المسافة',q/c*100/dk):k[0]=='c'?R('الاستهلاك',cv(q/d*100)):R('كمية الوقود',d*c/100/qk)]},'أدخل قيمتين لحساب القيمة الثالثة')]);
+X('ohm',OT,'قانون أوم','🔌',[M('',[['V','الجهد'],['uV','وحدة الجهد','s',['فولت','ملي فولت','كيلو فولت']],['I','التيار'],['uI','وحدة التيار','s',['أمبير','ملي أمبير']],['R','المقاومة'],['uR','وحدة المقاومة','s',['أوم','كيلو أوم','ميغا أوم']],['P','القدرة'],['uP','وحدة القدرة','s',['واط','ملي واط','كيلو واط']]],v=>{let{V,I,R:r,P:p}=v;const z=[[1,1e-3,1e3][v.uV],[1,1e-3][v.uI],[1,1e3,1e6][v.uR],[1,1e-3,1e3][v.uP]];V*=z[0];I*=z[1];r*=z[2];p*=z[3];const k=[V,I,r,p].map(x=>ok(x));if(k.filter(Boolean).length<2)return;if(k[0]&&k[1]){r=V/I;p=V*I}else if(k[0]&&k[2]){I=V/r;p=V*V/r}else if(k[0]&&k[3]){I=p/V;r=V*V/p}else if(k[1]&&k[2]){V=I*r;p=I*I*r}else if(k[1]&&k[3]){V=p/I;r=p/(I*I)}else{V=Math.sqrt(p*r);I=Math.sqrt(p/r)}return[R('الجهد',V/z[0]),R('التيار',I/z[1]),R('المقاومة',r/z[2]),R('القدرة',p/z[3])]},'أدخل قيمتين لحساب القيمتين الأخريين')]);
+
+// ===== قاعدة بيانات علمية قابلة للتوسيع =====
+const SCI_DB=[
+// Mechanics
+{id:'newton2',cat:'Mechanics',catAr:'الميكانيكا',name:'قانون نيوتن الثاني',nameEn:"Newton's Second Law",sym:'F = m·a',vars:[{k:'F',n:'القوة',u:'N'},{k:'m',n:'الكتلة',u:'kg'},{k:'a',n:'التسارع',u:'m/s²'}],calc:(v)=>{const o={};if(ok(v.m)&&ok(v.a))o.F=v.m*v.a;if(ok(v.F)&&ok(v.m)&&v.m)o.a=v.F/v.m;if(ok(v.F)&&ok(v.a)&&v.a)o.m=v.F/v.a;return o},exp:'القوة تساوي الكتلة مضروبة في التسارع.'},
+{id:'ke',cat:'Mechanics',catAr:'الميكانيكا',name:'الطاقة الحركية',nameEn:'Kinetic Energy',sym:'KE = ½·m·v²',vars:[{k:'KE',n:'الطاقة الحركية',u:'J'},{k:'m',n:'الكتلة',u:'kg'},{k:'v',n:'السرعة',u:'m/s'}],calc:(v)=>{const o={};if(ok(v.m)&&ok(v.v))o.KE=.5*v.m*v.v*v.v;if(ok(v.KE)&&ok(v.m)&&v.m)o.v=Math.sqrt(2*v.KE/v.m);if(ok(v.KE)&&ok(v.v)&&v.v)o.m=2*v.KE/(v.v*v.v);return o},exp:'طاقة الجسم الناتجة عن حركته.'},
+{id:'pe',cat:'Mechanics',catAr:'الميكانيكا',name:'طاقة الوضع الثقالية',nameEn:'Gravitational PE',sym:'PE = m·g·h',vars:[{k:'PE',n:'طاقة الوضع',u:'J'},{k:'m',n:'الكتلة',u:'kg'},{k:'g',n:'الجاذبية',u:'m/s²',def:9.80665},{k:'h',n:'الارتفاع',u:'m'}],calc:(v)=>{const g=ok(v.g)?v.g:9.80665;const o={};if(ok(v.m)&&ok(v.h))o.PE=v.m*g*v.h;if(ok(v.PE)&&ok(v.m)&&v.m)o.h=v.PE/(v.m*g);if(ok(v.PE)&&ok(v.h)&&v.h)o.m=v.PE/(g*v.h);return o},exp:'طاقة الجسم بسبب موضعه في مجال الجاذبية.'},
+{id:'mom',cat:'Mechanics',catAr:'الميكانيكا',name:'الزخم',nameEn:'Momentum',sym:'p = m·v',vars:[{k:'p',n:'الزخم',u:'kg·m/s'},{k:'m',n:'الكتلة',u:'kg'},{k:'v',n:'السرعة',u:'m/s'}],calc:(v)=>{const o={};if(ok(v.m)&&ok(v.v))o.p=v.m*v.v;if(ok(v.p)&&ok(v.m)&&v.m)o.v=v.p/v.m;if(ok(v.p)&&ok(v.v)&&v.v)o.m=v.p/v.v;return o},exp:'حاصل ضرب الكتلة في السرعة.'},
+{id:'work',cat:'Mechanics',catAr:'الميكانيكا',name:'الشغل',nameEn:'Work',sym:'W = F·d·cosθ',vars:[{k:'W',n:'الشغل',u:'J'},{k:'F',n:'القوة',u:'N'},{k:'d',n:'المسافة',u:'m'},{k:'th',n:'الزاوية θ',u:'°',def:0}],calc:(v)=>{const th=(ok(v.th)?v.th:0)*Math.PI/180;const o={};if(ok(v.F)&&ok(v.d))o.W=v.F*v.d*Math.cos(th);if(ok(v.W)&&ok(v.F)&&ok(v.d)&&v.F*v.d)o.th=Math.acos(v.W/(v.F*v.d))*180/Math.PI;return o},exp:'الشغل = القوة × الإزاحة × جيب تمام الزاوية.'},
+// Thermodynamics
+{id:'ideal',cat:'Thermodynamics',catAr:'الديناميكا الحرارية',name:'قانون الغاز المثالي',nameEn:'Ideal Gas Law',sym:'PV = nRT',vars:[{k:'P',n:'الضغط',u:'Pa'},{k:'V',n:'الحجم',u:'m³'},{k:'n',n:'عدد المولات',u:'mol'},{k:'T',n:'درجة الحرارة',u:'K'}],calc:(v)=>{const R=8.314462618;const o={};const k=['P','V','n','T'].map(x=>ok(v[x]));if(k.filter(Boolean).length<3)return o;if(!k[0])o.P=v.n*R*v.T/v.V;else if(!k[1])o.V=v.n*R*v.T/v.P;else if(!k[2])o.n=v.P*v.V/(R*v.T);else o.T=v.P*v.V/(v.n*R);return o},exp:'يربط ضغط وحجم وكمية ودرجة حرارة الغاز المثالي. R=8.314 J/(mol·K).'},
+{id:'qmc',cat:'Thermodynamics',catAr:'الديناميكا الحرارية',name:'الحرارة النوعية',nameEn:'Heat Transfer',sym:'Q = m·c·ΔT',vars:[{k:'Q',n:'الحرارة',u:'J'},{k:'m',n:'الكتلة',u:'kg'},{k:'c',n:'الحرارة النوعية',u:'J/(kg·K)'},{k:'dT',n:'ΔT',u:'K'}],calc:(v)=>{const o={};if(ok(v.m)&&ok(v.c)&&ok(v.dT))o.Q=v.m*v.c*v.dT;if(ok(v.Q)&&ok(v.m)&&ok(v.c)&&v.m*v.c)o.dT=v.Q/(v.m*v.c);if(ok(v.Q)&&ok(v.m)&&ok(v.dT)&&v.m*v.dT)o.c=v.Q/(v.m*v.dT);return o},exp:'كمية الحرارة اللازمة لتغيير درجة حرارة مادة.'},
+// Electricity
+{id:'ohmL',cat:'Electricity & Magnetism',catAr:'الكهرباء والمغناطيسية',name:'قانون أوم',nameEn:"Ohm's Law",sym:'V = I·R',vars:[{k:'V',n:'الجهد',u:'V'},{k:'I',n:'التيار',u:'A'},{k:'R',n:'المقاومة',u:'Ω'}],calc:(v)=>{const o={};if(ok(v.I)&&ok(v.R))o.V=v.I*v.R;if(ok(v.V)&&ok(v.R)&&v.R)o.I=v.V/v.R;if(ok(v.V)&&ok(v.I)&&v.I)o.R=v.V/v.I;return o},exp:'الجهد يساوي التيار مضروباً في المقاومة.'},
+{id:'powerE',cat:'Electricity & Magnetism',catAr:'الكهرباء والمغناطيسية',name:'القدرة الكهربائية',nameEn:'Electric Power',sym:'P = V·I',vars:[{k:'P',n:'القدرة',u:'W'},{k:'V',n:'الجهد',u:'V'},{k:'I',n:'التيار',u:'A'}],calc:(v)=>{const o={};if(ok(v.V)&&ok(v.I))o.P=v.V*v.I;if(ok(v.P)&&ok(v.V)&&v.V)o.I=v.P/v.V;if(ok(v.P)&&ok(v.I)&&v.I)o.V=v.P/v.I;return o},exp:'القدرة = الجهد × التيار.'},
+{id:'coulomb',cat:'Electricity & Magnetism',catAr:'الكهرباء والمغناطيسية',name:'قانون كولوم',nameEn:"Coulomb's Law",sym:'F = k·q₁·q₂/r²',vars:[{k:'F',n:'القوة',u:'N'},{k:'q1',n:'الشحنة 1',u:'C'},{k:'q2',n:'الشحنة 2',u:'C'},{k:'r',n:'المسافة',u:'m'}],calc:(v)=>{const k=8.9875517923e9;const o={};if(ok(v.q1)&&ok(v.q2)&&ok(v.r)&&v.r)o.F=k*v.q1*v.q2/(v.r*v.r);return o},exp:'القوة بين شحنتين نقطيتين. k≈8.99×10⁹ N·m²/C².'},
+// Optics
+{id:'snell',cat:'Optics',catAr:'البصريات',name:'قانون سنيل',nameEn:"Snell's Law",sym:'n₁·sinθ₁ = n₂·sinθ₂',vars:[{k:'n1',n:'معامل الانكسار 1',u:''},{k:'th1',n:'زاوية السقوط θ₁',u:'°'},{k:'n2',n:'معامل الانكسار 2',u:''},{k:'th2',n:'زاوية الانكسار θ₂',u:'°'}],calc:(v)=>{const o={};const s1=ok(v.th1)?Math.sin(v.th1*Math.PI/180):null;const s2=ok(v.th2)?Math.sin(v.th2*Math.PI/180):null;if(ok(v.n1)&&s1!=null&&ok(v.n2)&&v.n2){const x=v.n1*s1/v.n2;if(Math.abs(x)<=1)o.th2=Math.asin(x)*180/Math.PI}if(ok(v.n2)&&s2!=null&&ok(v.n1)&&v.n1){const x=v.n2*s2/v.n1;if(Math.abs(x)<=1)o.th1=Math.asin(x)*180/Math.PI}return o},exp:'يربط زاويتي السقوط والانكسار بمعاملي الانكسار.'},
+{id:'lens',cat:'Optics',catAr:'البصريات',name:'معادلة العدسة الرقيقة',nameEn:'Thin Lens Equation',sym:'1/f = 1/u + 1/v',vars:[{k:'f',n:'البعد البؤري',u:'m'},{k:'u',n:'بعد الجسم',u:'m'},{k:'v',n:'بعد الصورة',u:'m'}],calc:(v)=>{const o={};const inv=x=>ok(x)&&x?1/x:null;if(inv(v.u)!=null&&inv(v.v)!=null)o.f=1/(1/v.u+1/v.v);if(inv(v.f)!=null&&inv(v.u)!=null)o.v=1/(1/v.f-1/v.u);if(inv(v.f)!=null&&inv(v.v)!=null)o.u=1/(1/v.f-1/v.v);return o},exp:'تربط البعد البؤري ببعدي الجسم والصورة.'},
+// Waves
+{id:'wave',cat:'Waves',catAr:'الموجات',name:'معادلة الموجة',nameEn:'Wave Equation',sym:'v = f·λ',vars:[{k:'v',n:'السرعة',u:'m/s'},{k:'f',n:'التردد',u:'Hz'},{k:'lam',n:'الطول الموجي λ',u:'m'}],calc:(v)=>{const o={};if(ok(v.f)&&ok(v.lam))o.v=v.f*v.lam;if(ok(v.v)&&ok(v.f)&&v.f)o.lam=v.v/v.f;if(ok(v.v)&&ok(v.lam)&&v.lam)o.f=v.v/v.lam;return o},exp:'سرعة الموجة = التردد × الطول الموجي.'},
+{id:'period',cat:'Waves',catAr:'الموجات',name:'الدور والتردد',nameEn:'Period & Frequency',sym:'T = 1/f',vars:[{k:'T',n:'الدور',u:'s'},{k:'f',n:'التردد',u:'Hz'}],calc:(v)=>{const o={};if(ok(v.f)&&v.f)o.T=1/v.f;if(ok(v.T)&&v.T)o.f=1/v.T;return o},exp:'الدور هو مقلوب التردد.'},
+// Modern Physics
+{id:'einstein',cat:'Modern Physics',catAr:'الفيزياء الحديثة',name:'كتلة-طاقة (أينشتاين)',nameEn:'Mass-Energy Equivalence',sym:'E = m·c²',vars:[{k:'E',n:'الطاقة',u:'J'},{k:'m',n:'الكتلة',u:'kg'}],calc:(v)=>{const c2=89875517873681764;const o={};if(ok(v.m))o.E=v.m*c2;if(ok(v.E))o.m=v.E/c2;return o},exp:'تكافؤ الكتلة والطاقة. c≈2.998×10⁸ m/s.'},
+{id:'photo',cat:'Modern Physics',catAr:'الفيزياء الحديثة',name:'التأثير الكهروضوئي',nameEn:'Photoelectric Effect',sym:'E = h·f − φ',vars:[{k:'E',n:'الطاقة الحركية العظمى',u:'J'},{k:'f',n:'التردد',u:'Hz'},{k:'phi',n:'دالة الشغل φ',u:'J'}],calc:(v)=>{const h=6.62607015e-34;const o={};if(ok(v.f)&&ok(v.phi))o.E=h*v.f-v.phi;if(ok(v.E)&&ok(v.phi))o.f=(v.E+v.phi)/h;return o},exp:'طاقة الإلكترون المنبعث = طاقة الفوتون ناقص دالة الشغل.'},
+// Chemistry
+{id:'moles',cat:'Chemistry',catAr:'الكيمياء',name:'عدد المولات',nameEn:'Mole Calculation',sym:'n = m/M',vars:[{k:'n',n:'عدد المولات',u:'mol'},{k:'m',n:'الكتلة',u:'g'},{k:'M',n:'الكتلة المولية',u:'g/mol'}],calc:(v)=>{const o={};if(ok(v.m)&&ok(v.M)&&v.M)o.n=v.m/v.M;if(ok(v.n)&&ok(v.M))o.m=v.n*v.M;if(ok(v.n)&&ok(v.m)&&v.n)o.M=v.m/v.n;return o},exp:'عدد المولات = الكتلة / الكتلة المولية.'},
+{id:'dilution',cat:'Chemistry',catAr:'الكيمياء',name:'قانون التخفيف',nameEn:'Dilution Law',sym:'C₁V₁ = C₂V₂',vars:[{k:'C1',n:'التركيز 1',u:'mol/L'},{k:'V1',n:'الحجم 1',u:'L'},{k:'C2',n:'التركيز 2',u:'mol/L'},{k:'V2',n:'الحجم 2',u:'L'}],calc:(v)=>{const o={};const k=['C1','V1','C2','V2'].map(x=>ok(v[x]));if(k.filter(Boolean).length<3)return o;if(!k[0]&&v.V1)o.C1=v.C2*v.V2/v.V1;else if(!k[1]&&v.C1)o.V1=v.C2*v.V2/v.C1;else if(!k[2]&&v.V2)o.C2=v.C1*v.V1/v.V2;else if(!k[3]&&v.C2)o.V2=v.C1*v.V1/v.C2;return o},exp:'عند التخفيف يبقى عدد المولات ثابتاً.'},
+{id:'ph',cat:'Physical Chemistry',catAr:'الكيمياء الفيزيائية',name:'الأس الهيدروجيني pH',nameEn:'pH Calculation',sym:'pH = −log₁₀[H⁺]',vars:[{k:'pH',n:'pH',u:''},{k:'H',n:'[H⁺]',u:'mol/L'}],calc:(v)=>{const o={};if(ok(v.H)&&v.H>0)o.pH=-Math.log10(v.H);if(ok(v.pH))o.H=Math.pow(10,-v.pH);return o},exp:'مقياس حموضة المحلول. pH=7 متعادل عند 25°C.'},
+{id:'beerlambert',cat:'Physical Chemistry',catAr:'الكيمياء الفيزيائية',name:'قانون بير-لامبرت',nameEn:'Beer-Lambert Law',sym:'A = ε·c·l',vars:[{k:'A',n:'الامتصاصية',u:''},{k:'eps',n:'معامل الامتصاص ε',u:'L/(mol·cm)'},{k:'c',n:'التركيز',u:'mol/L'},{k:'l',n:'طول المسار',u:'cm',def:1}],calc:(v)=>{const l=ok(v.l)?v.l:1;const o={};if(ok(v.eps)&&ok(v.c))o.A=v.eps*v.c*l;if(ok(v.A)&&ok(v.eps)&&ok(v.l)&&v.eps*l)o.c=v.A/(v.eps*l);return o},exp:'يربط امتصاص الضوء بتركيز المحلول.'},
+{id:'density',cat:'Physical Chemistry',catAr:'الكيمياء الفيزيائية',name:'الكثافة',nameEn:'Density',sym:'ρ = m/V',vars:[{k:'rho',n:'الكثافة',u:'kg/m³'},{k:'m',n:'الكتلة',u:'kg'},{k:'V',n:'الحجم',u:'m³'}],calc:(v)=>{const o={};if(ok(v.m)&&ok(v.V)&&v.V)o.rho=v.m/v.V;if(ok(v.rho)&&ok(v.V))o.m=v.rho*v.V;if(ok(v.rho)&&ok(v.m)&&v.rho)o.V=v.m/v.rho;return o},exp:'الكثافة = الكتلة / الحجم.'},
+{id:'avogadro',cat:'Atomic Chemistry',catAr:'الكيمياء الذرية',name:'عدد أفوجادرو',nameEn:"Avogadro's Number",sym:'N = n·N_A',vars:[{k:'N',n:'عدد الجسيمات',u:''},{k:'n',n:'عدد المولات',u:'mol'}],calc:(v)=>{const NA=6.02214076e23;const o={};if(ok(v.n))o.N=v.n*NA;if(ok(v.N))o.n=v.N/NA;return o},exp:'عدد الجسيمات في مول واحد ≈ 6.022×10²³.'}
+];
+
+// ===== مرجع التحاليل المخبرية (تعليمي فقط) =====
+const LAB_DB=[
+{id:'hgb',name:'الهيموغلوبين',nameEn:'Hemoglobin',abbr:'Hgb / Hb',unit:'g/dL',purpose:'قياس قدرة الدم على حمل الأكسجين',low:12,high:17.5,critLow:7,critHigh:20,note:'يختلف حسب الجنس والعمر'},
+{id:'hct',name:'الهيماتوكريت',nameEn:'Hematocrit',abbr:'Hct / PCV',unit:'%',purpose:'نسبة حجم كريات الدم الحمراء من حجم الدم الكلي',low:36,high:50,critLow:21,critHigh:60,note:''},
+{id:'wbc',name:'كريات الدم البيضاء',nameEn:'White Blood Cells',abbr:'WBC',unit:'×10³/µL',purpose:'تقييم الاستجابة المناعية والعدوى',low:4,high:11,critLow:2,critHigh:30,note:''},
+{id:'rbc',name:'كريات الدم الحمراء',nameEn:'Red Blood Cells',abbr:'RBC',unit:'×10⁶/µL',purpose:'تقييم قدرة الدم على نقل الأكسجين',low:4.2,high:5.9,critLow:2.5,critHigh:7,note:''},
+{id:'plt',name:'الصفائح الدموية',nameEn:'Platelets',abbr:'PLT',unit:'×10³/µL',purpose:'تقييم قدرة التخثر',low:150,high:450,critLow:50,critHigh:1000,note:''},
+{id:'glu',name:'الجلوكوز (صائم)',nameEn:'Glucose (Fasting)',abbr:'Glu / FBS',unit:'mg/dL',purpose:'تقييم مستوى السكر في الدم',low:70,high:100,critLow:40,critHigh:400,note:'صائم 8–12 ساعة'},
+{id:'hba1c',name:'السكر التراكمي',nameEn:'HbA1c',abbr:'HbA1c',unit:'%',purpose:'متوسط مستوى السكر خلال 2–3 أشهر',low:4,high:5.6,critLow:null,critHigh:10,note:'<5.7% طبيعي تقريبي'},
+{id:'chol',name:'الكوليسترول الكلي',nameEn:'Total Cholesterol',abbr:'TC',unit:'mg/dL',purpose:'تقييم خطر أمراض القلب',low:null,high:200,critLow:null,critHigh:300,note:'<200 مرغوب'},
+{id:'ldl',name:'كوليسترول LDL',nameEn:'LDL Cholesterol',abbr:'LDL',unit:'mg/dL',purpose:'الكوليسترول الضار',low:null,high:100,critLow:null,critHigh:190,note:'الأمثل <100'},
+{id:'hdl',name:'كوليسترول HDL',nameEn:'HDL Cholesterol',abbr:'HDL',unit:'mg/dL',purpose:'الكوليسترول النافع',low:40,high:null,critLow:20,critHigh:null,note:'الأمثل ≥60'},
+{id:'tg',name:'الدهون الثلاثية',nameEn:'Triglycerides',abbr:'TG',unit:'mg/dL',purpose:'تقييم الدهون في الدم',low:null,high:150,critLow:null,critHigh:500,note:''},
+{id:'crea',name:'الكرياتينين',nameEn:'Creatinine',abbr:'Cr',unit:'mg/dL',purpose:'تقييم وظائف الكلى',low:0.6,high:1.3,critLow:null,critHigh:5,note:'يختلف حسب الجنس والكتلة العضلية'},
+{id:'bun',name:'نيتروجين اليوريا',nameEn:'Blood Urea Nitrogen',abbr:'BUN',unit:'mg/dL',purpose:'تقييم وظائف الكلى',low:7,high:20,critLow:null,critHigh:100,note:''},
+{id:'urea',name:'اليوريا',nameEn:'Urea',abbr:'Urea',unit:'mg/dL',purpose:'تقييم وظائف الكلى',low:15,high:45,critLow:null,critHigh:200,note:''},
+{id:'ua',name:'حمض اليوريك',nameEn:'Uric Acid',abbr:'UA',unit:'mg/dL',purpose:'تقييم النقرس وأيض البيورينات',low:2.5,high:7.0,critLow:null,critHigh:12,note:''},
+{id:'alt',name:'إنزيم ALT',nameEn:'Alanine Aminotransferase',abbr:'ALT / SGPT',unit:'U/L',purpose:'تقييم وظائف الكبد',low:7,high:56,critLow:null,critHigh:500,note:''},
+{id:'ast',name:'إنزيم AST',nameEn:'Aspartate Aminotransferase',abbr:'AST / SGOT',unit:'U/L',purpose:'تقييم الكبد والعضلات',low:10,high:40,critLow:null,critHigh:500,note:''},
+{id:'alp',name:'الفوسفاتاز القلوي',nameEn:'Alkaline Phosphatase',abbr:'ALP',unit:'U/L',purpose:'تقييم الكبد والعظام',low:44,high:147,critLow:null,critHigh:500,note:''},
+{id:'tbil',name:'البيليروبين الكلي',nameEn:'Total Bilirubin',abbr:'TBil',unit:'mg/dL',purpose:'تقييم الكبد وانحلال الدم',low:0.1,high:1.2,critLow:null,critHigh:15,note:''},
+{id:'alb',name:'الألبومين',nameEn:'Albumin',abbr:'Alb',unit:'g/dL',purpose:'تقييم التغذية ووظائف الكبد',low:3.5,high:5.0,critLow:2.0,critHigh:null,note:''},
+{id:'tp',name:'البروتين الكلي',nameEn:'Total Protein',abbr:'TP',unit:'g/dL',purpose:'تقييم البروتينات في الدم',low:6.0,high:8.3,critLow:4,critHigh:null,note:''},
+{id:'na',name:'الصوديوم',nameEn:'Sodium',abbr:'Na',unit:'mEq/L',purpose:'توازن السوائل والشوارد',low:136,high:145,critLow:120,critHigh:160,note:''},
+{id:'k',name:'البوتاسيوم',nameEn:'Potassium',abbr:'K',unit:'mEq/L',purpose:'وظائف الأعصاب والعضلات والقلب',low:3.5,high:5.1,critLow:2.5,critHigh:6.5,note:''},
+{id:'cl',name:'الكلوريد',nameEn:'Chloride',abbr:'Cl',unit:'mEq/L',purpose:'توازن الأحماض والقواعد',low:98,high:107,critLow:80,critHigh:120,note:''},
+{id:'ca',name:'الكالسيوم',nameEn:'Calcium',abbr:'Ca',unit:'mg/dL',purpose:'العظام والعضلات والأعصاب',low:8.5,high:10.5,critLow:6.5,critHigh:13,note:''},
+{id:'mg',name:'المغنيسيوم',nameEn:'Magnesium',abbr:'Mg',unit:'mg/dL',purpose:'وظائف العضلات والأعصاب',low:1.7,high:2.2,critLow:1.0,critHigh:4.5,note:''},
+{id:'phos',name:'الفوسفور',nameEn:'Phosphorus',abbr:'PO4',unit:'mg/dL',purpose:'العظام والطاقة الخلوية',low:2.5,high:4.5,critLow:1.0,critHigh:8,note:''},
+{id:'tsh',name:'الهرمون المحفز للدرقية',nameEn:'TSH',abbr:'TSH',unit:'mIU/L',purpose:'تقييم وظائف الغدة الدرقية',low:0.4,high:4.0,critLow:null,critHigh:20,note:''},
+{id:'ft4',name:'الثيروكسين الحر',nameEn:'Free T4',abbr:'FT4',unit:'ng/dL',purpose:'تقييم وظائف الغدة الدرقية',low:0.8,high:1.8,critLow:null,critHigh:null,note:''},
+{id:'fe',name:'الحديد',nameEn:'Iron',abbr:'Fe / Serum Iron',unit:'µg/dL',purpose:'تقييم مخزون الحديد',low:60,high:170,critLow:null,critHigh:null,note:''},
+{id:'fer',name:'الفيريتين',nameEn:'Ferritin',abbr:'Ferritin',unit:'ng/mL',purpose:'مخزون الحديد في الجسم',low:30,high:400,critLow:10,critHigh:1000,note:'يختلف حسب الجنس'},
+{id:'vitd',name:'فيتامين د',nameEn:'Vitamin D (25-OH)',abbr:'Vit D',unit:'ng/mL',purpose:'صحة العظام والمناعة',low:30,high:100,critLow:10,critHigh:150,note:'النقص شائع'},
+{id:'b12',name:'فيتامين ب12',nameEn:'Vitamin B12',abbr:'B12',unit:'pg/mL',purpose:'وظائف الأعصاب وتكوين الدم',low:200,high:900,critLow:100,critHigh:null,note:''},
+{id:'crp',name:'بروتين سي التفاعلي',nameEn:'C-Reactive Protein',abbr:'CRP',unit:'mg/L',purpose:'مؤشر الالتهاب',low:null,high:3,critLow:null,critHigh:50,note:'<3 طبيعي تقريبي'},
+{id:'esr',name:'سرعة الترسيب',nameEn:'Erythrocyte Sedimentation Rate',abbr:'ESR',unit:'mm/hr',purpose:'مؤشر غير نوعي للالتهاب',low:0,high:20,critLow:null,critHigh:100,note:'يختلف حسب العمر والجنس'},
+{id:'inr',name:'نسبة التخثر الدولية',nameEn:'INR',abbr:'INR',unit:'',purpose:'مراقبة مضادات التخثر',low:0.8,high:1.2,critLow:null,critHigh:5,note:'الهدف العلاجي يختلف'},
+{id:'pt',name:'زمن البروثرومبين',nameEn:'Prothrombin Time',abbr:'PT',unit:'sec',purpose:'تقييم مسار التخثر الخارجي',low:11,high:13.5,critLow:null,critHigh:30,note:''},
+{id:'psa',name:'المستضد البروستاتي',nameEn:'PSA',abbr:'PSA',unit:'ng/mL',purpose:'فحص البروستات (للذكور)',low:null,high:4,critLow:null,critHigh:20,note:'يختلف حسب العمر'},
+{id:'beta',name:'هرمون الحمل',nameEn:'Beta-hCG',abbr:'β-hCG',unit:'mIU/mL',purpose:'تأكيد الحمل ومراقبته',low:null,high:5,critLow:null,critHigh:null,note:'<5 عادة غير حامل'}
+];
+
+function labStatus(test,val){
+  if(!ok(val))return null;
+  const{low,high,critLow,critHigh}=test;
+  if(critLow!=null&&val<critLow)return'c';
+  if(critHigh!=null&&val>critHigh)return'c';
+  if(low!=null&&val<low)return'l';
+  if(high!=null&&val>high)return'h';
+  return'n';
+}
+function labBadge(st){
+  if(st=='n')return'<span class="badge badge-n">'+L('طبيعي')+'</span>';
+  if(st=='l')return'<span class="badge badge-l">'+L('منخفض')+'</span>';
+  if(st=='h')return'<span class="badge badge-h">'+L('مرتفع')+'</span>';
+  if(st=='c')return'<span class="badge badge-c">'+L('حرج')+'</span>';
+  return'';
+}
+function labWarn(st){
+  if(st=='c')return'<div class="disc warn-c">⚠️ '+L('قيمة حرجة: يُنصح بمراجعة مختص رعاية صحية فوراً. هذه المعلومات تعليمية وليست تشخيصاً طبياً.')+'</div>';
+  if(st=='l'||st=='h')return'<div class="disc warn-h">⚠️ '+L('القيمة خارج النطاق المرجعي الشائع. راجع مختصاً للتفسير. النطاقات تختلف بين المختبرات.')+'</div>';
+  if(st=='n')return'<div class="disc warn-n">✓ '+L('ضمن النطاق المرجعي التقريبي.')+'</div>';
+  return'';
+}
+
+// أدوات العلوم والمختبر
+X('sci',SC,'المعادلات العلمية','🔬',[M('',[],()=>null)],'');
+X('lab',MD,'تحاليل المختبر','🩸',[M('',[],()=>null)],'');
+X('metals',MK,'أسعار المعادن','🥇',[M('',[],()=>null)],'');
+X('fuel',MK,'أسعار المحروقات والطاقة','⛽',[M('',[],()=>null)],'');
+X('ratio',SC,'النسب والتوافق','⚖️',[M('نسبة بسيطة a:b',[['a','القيمة a'],['b','القيمة b']],v=>{if(!ok(v.a)||!ok(v.b)||!v.b)return;const r=v.a/v.b,g=(a,b)=>{a=Math.round(Math.abs(a)*1e6);b=Math.round(Math.abs(b)*1e6);while(b){const t=b;b=a%b;a=t}return a||1};const A1=Math.round(v.a*1e6),B1=Math.round(v.b*1e6),d=g(v.a,v.b);return[R('النسبة a/b',fm(r)),R('النسبة المبسطة',(A1/d)+' : '+(B1/d)),R('النسبة المئوية a من b',fm(r*100)+'%'),R('شرح','نسبة رياضية مباشرة a÷b — ليست علاقة طبية أو علمية مخترعة')]}),M('نسبة التغير %',[['old','القيمة القديمة'],['neu','القيمة الجديدة']],v=>{if(!ok(v.old)||!ok(v.neu)||!v.old)return;const ch=(v.neu-v.old)/v.old*100;return[R('التغير %',fm(ch)+'%'),R('الاتجاه',ch>0?L('زيادة'):ch<0?L('نقصان'):L('ثابت')),R('شرح','((جديد−قديم)/قديم)×100')]}),M('كفاءة / توافق رياضي',[['actual','القيمة الفعلية'],['ideal','القيمة المرجعية']],v=>{if(!ok(v.actual)||!ok(v.ideal)||!v.ideal)return;const pct=Math.min(100,Math.max(0,100-Math.abs(v.actual-v.ideal)/Math.abs(v.ideal)*100));return[R('نسبة التوافق %',fm(pct)+'%'),R('الانحراف المطلق',fm(Math.abs(v.actual-v.ideal))),R('الانحراف النسبي %',fm(Math.abs(v.actual-v.ideal)/Math.abs(v.ideal)*100)+'%'),R('شرح','توافق رياضي = 100−|فعلي−مرجعي|/|مرجعي|×100 (مقصور 0–100). ليس تشخيصاً ولا علاقة طبية مخترعة.')]})]);
+
+const PRE=x=>'<pre style="white-space:pre-wrap;word-break:break-all;margin:0;direction:ltr;text-align:left;font-size:12px">'+escHtml(x)+'</pre>';
+X('sym',SC,'الرموز العلمية','∑',[M('',[],()=>null)],'');
+X('shp2',GE,'أشكال إضافية (مساحة ومحيط)','◔',[
+M('قطاع دائري',[['r','نصف القطر'],['a','الزاوية (درجة)']],v=>ok(v.r,v.a)&&[R('المساحة',v.a/360*pi*v.r**2),R('طول القوس',v.a/360*2*pi*v.r),R('المحيط',v.a/360*2*pi*v.r+2*v.r)]),
+M('حلقة دائرية',[['R','نصف القطر الخارجي'],['r','نصف القطر الداخلي']],v=>ok(v.R,v.r)&&[R('المساحة',pi*(v.R**2-v.r**2)),R('المحيط الخارجي',2*pi*v.R),R('المحيط الداخلي',2*pi*v.r)]),
+M('نصف دائرة',[['r','نصف القطر']],v=>ok(v.r)&&[R('المساحة',pi*v.r**2/2),R('المحيط',pi*v.r+2*v.r)]),
+M('مثلث قائم',[['a','الضلع أ'],['b','الضلع ب']],v=>ok(v.a,v.b)&&[R('الوتر',Math.hypot(v.a,v.b)),R('المساحة',v.a*v.b/2),R('المحيط',v.a+v.b+Math.hypot(v.a,v.b))])],'');
+X('tnk',GE,'حجم الخزان والسوائل','🛢',[
+M('خزان أسطواني',[['d','القطر (سم)'],['h','الارتفاع / العمق (سم)']],v=>ok(v.d,v.h)&&[R('لتر',pi*(v.d/2)**2*v.h/1e3),R('م³',pi*(v.d/2)**2*v.h/1e6),R('غالون أمريكي',pi*(v.d/2)**2*v.h/1e3/3.785411784)]),
+M('خزان مستطيل',[['l','الطول (سم)'],['w','العرض (سم)'],['h','الارتفاع / العمق (سم)']],v=>ok(v.l,v.w,v.h)&&[R('لتر',v.l*v.w*v.h/1e3),R('م³',v.l*v.w*v.h/1e6),R('غالون أمريكي',v.l*v.w*v.h/1e3/3.785411784)]),
+M('وزن السائل',[['v','الحجم (لتر)'],['d','الكثافة (غ/مل) — الماء = 1']],v=>ok(v.v,v.d)&&[R('الوزن (كغ)',v.v*v.d),R('الوزن (رطل)',v.v*v.d/.45359237)])],'');
+C('liq',UN,'السوائل','💧',[['لتر',1],['مل',.001],['سنتيلتر',.01],['ديسيلتر',.1],['م³',1e3],['غالون أمريكي',3.785411784],['غالون بريطاني',4.54609],['كوارت أمريكي',.946352946],['باينت أمريكي',.473176473],['باينت بريطاني',.56826125],['كوب أمريكي',.2365882365],['أوقية سائلة أمريكية',.0295735296],['أوقية سائلة بريطانية',.0284130625],['ملعقة كبيرة',.01478676478],['ملعقة صغيرة',.00492892159],['برميل نفط (bbl)',158.987294928],['قدم³',28.316846592],['إنش³',.016387064]]);
+X('dvt',DV,'صندوق أدوات المطوّر','🧰',[
+M('JSON تنسيق وفحص',[['j','الصق JSON','t']],v=>{if(!v.j.trim())return;try{const o=JSON.parse(v.j);return[R('✅ JSON صالح',PRE(JSON.stringify(o,null,2))),R('مضغوط',PRE(JSON.stringify(o)))]}catch(e){return[R('❌ خطأ',PRE(e.message))]}}),
+M('Base64 ترميز',[['s','النص','t']],v=>{if(!v.s)return;return[R('Base64',PRE(btoa(unescape(encodeURIComponent(v.s)))))]}),
+M('Base64 فك الترميز',[['s','نص Base64','t']],v=>{if(!v.s)return;try{return[R('النص',PRE(decodeURIComponent(escape(atob(v.s.trim())))))]}catch(e){return[R('❌ خطأ',PRE('Base64 غير صالح'))]}}),
+M('URL ترميز / فك',[['s','النص أو الرابط','t']],v=>{if(!v.s)return;let d='—';try{d=decodeURIComponent(v.s)}catch(e){}return[R('ترميز',PRE(encodeURIComponent(v.s))),R('فك الترميز',PRE(d))]}),
+M('Unix Timestamp',[['n','طابع زمني (ثوانٍ أو ملّي ثانية) — فارغ = الآن']],v=>{const n=ok(v.n)?v.n:Date.now()/1e3,ms=Math.abs(n)>1e11?n:n*1e3,d=new Date(ms);return[R('UTC',d.toISOString()),R('الوقت المحلي',DT(d)),R('Unix (ثانية)',String(Math.floor(ms/1e3))),R('Unix (ملّي ثانية)',String(Math.floor(ms)))]}),
+M('ألوان HEX ← RGB / HSL',[['c','HEX مثل #FFAA00','t']],v=>{const m=/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(v.c.trim());if(!m)return;let x=m[1];if(x.length==3)x=x.replace(/./g,'$&$&');const r=parseInt(x.slice(0,2),16),g=parseInt(x.slice(2,4),16),b=parseInt(x.slice(4),16),r1=r/255,g1=g/255,b1=b/255,mx=Math.max(r1,g1,b1),mn=Math.min(r1,g1,b1),l=(mx+mn)/2,d=mx-mn;let H=0,S=0;if(d){S=d/(1-Math.abs(2*l-1));H=mx==r1?((g1-b1)/d)%6:mx==g1?(b1-r1)/d+2:(r1-g1)/d+4;H=Math.round(H*60);if(H<0)H+=360}return[R('RGB','rgb('+r+', '+g+', '+b+')'),R('HSL','hsl('+H+', '+Math.round(S*100)+'%, '+Math.round(l*100)+'%)'),R('معاينة','<span style="display:inline-block;width:60px;height:22px;border-radius:6px;background:#'+x+'"></span>')]}),
+M('Regex اختبار',[['p','النمط (Pattern)','t'],['s','النص','t'],['f','الخيارات (i,m,s)','t']],v=>{if(!v.p)return;try{const f=(v.f||'').replace(/[^ims]/g,'')+'g',r=new RegExp(v.p,f),a=[];let m,k=0;while((m=r.exec(v.s))&&k++<200){a.push(m[0]);if(m[0]==='')r.lastIndex++}return[R('عدد التطابقات',a.length),R('التطابقات',PRE(a.join('\n')||'—'))]}catch(e){return[R('❌ خطأ',PRE(e.message))]}}),
+M('إحصائيات النص',[['s','النص','t']],v=>{const s=v.s;if(!s)return;return[R('الأحرف',s.length),R('الكلمات',s.trim().split(/\s+/).length),R('البايتات (UTF-8)',unescape(encodeURIComponent(s)).length)]}),
+M('UUID v4',[['n','العدد (1–10)']],v=>{const k=Math.min(10,Math.max(1,ok(v.n)?v.n|0:1)),a=[];for(let i=0;i<k;i++){const b=new Uint8Array(16);(window.crypto||window.msCrypto).getRandomValues(b);b[6]=b[6]&15|64;b[8]=b[8]&63|128;const x=Array.prototype.map.call(b,q=>(q+256).toString(16).slice(1)).join('');a.push(x.slice(0,8)+'-'+x.slice(8,12)+'-'+x.slice(12,16)+'-'+x.slice(16,20)+'-'+x.slice(20))}return[R('UUID',PRE(a.join('\n')))]})],'');
+
+// ===== الآلة الحاسبة =====
+let ex='',mem=ST.g('mem',0),H=ST.g('hist',[]),fr=0;
+function ev0(s){const src=s.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\s+/g,'');let i=0;const bad=()=>{throw 0};
+const expr=()=>{let a=term();while(src[i]=='+'||src[i]=='-'){const o=src[i++],b=term(),bv=b.p?a.v*b.v:b.v;a={v:o=='+'?a.v+bv:a.v-bv}}return a},
+term=()=>{let a=unary();for(;;){const c=src[i];if(c=='*'||c=='/'){i++;const b=unary();a={v:c=='*'?a.v*b.v:a.v/b.v}}else if(c=='('||c=='π'||c=='√'||(c&&/[\d.]/.test(c))){const b=unary();a={v:a.v*b.v}}else return a}},
+unary=()=>{if(src[i]=='-'){i++;return{v:-unary().v}}if(src[i]=='+'){i++;return unary()}return pow()},
+pow=()=>{const a=post();if(src[i]=='^'){i++;return{v:Math.pow(a.v,unary().v)}}return a},
+post=()=>{let a=prim();for(;;){if(src[i]=='%'){i++;a={v:a.v/100,p:true}}else if(src[i]=='!'){i++;a={v:F(a.v)}}else return a}},
+prim=()=>{const c=src[i];if(c=='('){i++;const e=expr();if(src[i]==')')i++;return{v:e.v}}if(c=='π'){i++;return{v:Math.PI}}if(c=='√'){i++;const x=prim().v;return{v:Math.sqrt(x)}}
+const m=/^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/i.exec(src.slice(i));if(!m)bad();i+=m[0].length;if(src[i]=='.')bad();return{v:parseFloat(m[0])}};
+const r=expr();if(i<src.length)bad();return r.v}
+const sv=r=>Math.abs(r)<1e15&&r%1==0?String(r):String(+r.toPrecision(12));
+
+let DG=ST.g('dg',1);
+const SF={sin:x=>Math.sin(DG?x*pi/180:x),cos:x=>Math.cos(DG?x*pi/180:x),tan:x=>Math.tan(DG?x*pi/180:x),asin:x=>DG?Math.asin(x)*180/pi:Math.asin(x),acos:x=>DG?Math.acos(x)*180/pi:Math.acos(x),atan:x=>DG?Math.atan(x)*180/pi:Math.atan(x),sinh:Math.sinh,cosh:Math.cosh,tanh:Math.tanh,ln:Math.log,log:x=>Math.log(x)/Math.LN10,log2:x=>Math.log(x)/Math.LN2,exp:Math.exp,abs:Math.abs,cbrt:x=>x<0?-Math.pow(-x,1/3):Math.pow(x,1/3),floor:Math.floor,ceil:Math.ceil};
+function ev(s){s=String(s).replace(/ℯ/g,'('+Math.E+')');const re=/(asin|acos|atan|sinh|cosh|tanh|sin|cos|tan|log2|log|ln|exp|abs|cbrt|floor|ceil)\(/;let m;
+while((m=re.exec(s))){const a=m.index+m[0].length;let d=1,j=a;while(j<s.length&&d){const c=s[j++];if(c=='(')d++;else if(c==')')d--}
+const v=SF[m[1]](ev(s.slice(a,d?s.length:j-1)));if(!ok(v))throw 0;s=s.slice(0,m.index)+'('+v+')'+(d?'':s.slice(j))}
+return ev0(s)}
+function sciPad(){const kp=Q('#kp');if(!kp)return;let on=ST.g('sp',false);
+const t=E('button',0,'🔬 '+(AR?'علمي':'Scientific'));t.style.cssText='display:block;width:100%;margin:0 0 6px';
+const b=E('div');b.id='spd';b.style.cssText='grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:6px;direction:ltr';
+const vis=()=>{b.style.display=on?'grid':'none'};
+[['sin','sin('],['cos','cos('],['tan','tan('],['sin⁻¹','asin('],['cos⁻¹','acos('],['tan⁻¹','atan('],['sinh','sinh('],['cosh','cosh('],['tanh','tanh('],['ln','ln('],['log','log('],['log₂','log2('],['eˣ','exp('],['10ˣ','10^('],['x²','^2'],['x³','^3'],['xʸ','^'],['1/x','^(−1)'],['|x|','abs('],['∛','cbrt('],['ℯ','ℯ'],['(','('],[')',')'],['⌊x⌋','floor('],['⌈x⌉','ceil(']].forEach(k=>{const x=E('button',0);x.textContent=k[0];x.style.cssText='padding:10px 2px;font-size:15px;border-radius:12px';x.onclick=()=>{if(fr&&k[1][0]!='^'&&k[1]!=')')ex='';fr=0;if(k[1]=='^'&&!ex)return;ex+=k[1];show()};b.append(x)});
+const dg=E('button',0);dg.style.cssText='padding:10px 2px;font-size:15px;border-radius:12px;color:var(--a)';const sd=()=>{dg.textContent=DG?'DEG':'RAD'};sd();dg.onclick=()=>{DG=DG?0:1;ST.s('dg',DG);sd();show()};b.append(dg);
+t.onclick=()=>{on=!on;ST.s('sp',on);vis()};vis();kp.prepend(b);kp.prepend(t)}
+const GR='α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ ς τ υ φ χ ψ ω ϵ ϑ ϰ ϱ ϖ ϕ Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω',
+EL='H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og',
+SYM=[['الجبر والعلاقات','Algebra & relations','+ − × ÷ ± ∓ = ≠ ≈ ≡ ≢ ≅ ∼ ≃ ≔ ≝ ≟ ≙ ∝ < > ≤ ≥ ≪ ≫ ≮ ≯ ⁄ ∣ ∤ ∥ ⊥ ∞ ∅ √ ∛ ∜ ∑ ∏ ∐ ! % ‰ ‱ ° ′ ″ ( ) [ ] { } ⟨ ⟩ | ‖ ⌊ ⌋ ⌈ ⌉ ∘ ∙ · ⋅ ∗ ⋆ ƒ ℯ ⅈ ∠ ∡ ∢ △ □ ◇ ∟ ⌒'],
+['المجموعات والمنطق','Sets & logic','∈ ∉ ∋ ∌ ⊂ ⊃ ⊆ ⊇ ⊄ ⊅ ⊊ ⊋ ∪ ∩ ∖ ⊎ ⊓ ⊔ ∁ ∀ ∃ ∄ ∴ ∵ ∧ ∨ ¬ ⊕ ⊗ ⊙ ⊖ ⊘ ⊢ ⊣ ⊨ ⊤ ⇒ ⇔ ⇐ → ← ↔ ↦ ∅ ℕ ℤ ℚ ℝ ℂ ℙ ℍ ℵ ℶ ℷ ℸ'],
+['التفاضل والتكامل','Calculus','∫ ∬ ∭ ∮ ∯ ∰ ∂ ∇ Δ δ ∆ ′ ″ ‴ ∑ ∏ ∞ → ↗ ↘ ƒ ⨌ lim sup inf max min d/dx ∂/∂x'],
+['الحروف اليونانية','Greek letters',GR],
+['أسس وأدلة وكسور','Super/subscripts & fractions','⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ⁺ ⁻ ⁼ ⁽ ⁾ ⁿ ⁱ ˣ ʸ ᵃ ᵇ ᶜ ᵈ ᵉ ᶠ ᵍ ʰ ʲ ᵏ ˡ ᵐ ᵒ ᵖ ʳ ˢ ᵗ ᵘ ᵛ ʷ ᶻ ₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉ ₊ ₋ ₌ ₍ ₎ ₐ ₑ ₒ ₓ ₕ ₖ ₗ ₘ ₙ ₚ ₛ ₜ ½ ⅓ ⅔ ¼ ¾ ⅕ ⅖ ⅗ ⅘ ⅙ ⅚ ⅐ ⅛ ⅜ ⅝ ⅞ ⅑ ⅒ ↉'],
+['رموز الفيزياء','Physics symbols','ℏ ħ ℓ Å Ω ℧ µ ° ℃ ℉ ∝ ∥ ⊥ ∠ ∮ ∇ Δ Σ Φ Ψ ρ σ τ η θ λ ν ω ε μ ℱ ℒ ℋ ℰ ℬ ℳ ℛ ℜ ℑ † ‡ ⊗ ⊕ ⟨ ⟩ ⇀ ↼ → ← ↑ ↓ ⇌ ≈ ≪ ≫ ∞ √ ∫ ∂ ⌀ ⚛ ☢ ☣ ⚡ ↯ v₀ x₀ t½ Eₖ Eₚ Fₙ Δx Δt Δv Δp ΔE ΔU ΔT ΔQ ΔS'],
+['وحدات SI وشائعة','SI & common units','m s kg A K mol cd N Pa J W C V F Ω S Wb T H Hz lm lx Bq Gy Sv kat eV m/s m/s² N·m kg·m/s J/K J/mol W/m² V/m N/C C/m² A/m Ω·m kg/m³ rad sr °C µm nm pm fm km cm mm µs ns ms kHz MHz GHz THz kW MW GW kJ MJ kPa MPa mol/L g/mol m³ cm³ mL L mA µA kV'],
+['ثوابت فيزيائية (انسخ)','Physical constants (copy)','c = 299 792 458 m/s;h = 6.62607015×10⁻³⁴ J·s;ħ = 1.054571817×10⁻³⁴ J·s;G = 6.67430×10⁻¹¹ N·m²/kg²;g = 9.80665 m/s²;e = 1.602176634×10⁻¹⁹ C;k_B = 1.380649×10⁻²³ J/K;N_A = 6.02214076×10²³ mol⁻¹;R = 8.314462618 J/(mol·K);ε₀ = 8.8541878128×10⁻¹² F/m;μ₀ = 1.25663706212×10⁻⁶ N/A²;mₑ = 9.1093837015×10⁻³¹ kg;mₚ = 1.67262192369×10⁻²⁷ kg;mₙ = 1.67492749804×10⁻²⁷ kg;σ = 5.670374419×10⁻⁸ W/(m²·K⁴);α ≈ 1/137.035999;u = 1.66053906660×10⁻²⁷ kg;a₀ = 5.29177210903×10⁻¹¹ m;R∞ = 1.0973731568×10⁷ m⁻¹;atm = 101 325 Pa',1],
+['رموز الكيمياء','Chemistry symbols','→ ⇌ ⇄ ⇆ ⇋ ⇀ ↼ ↑ ↓ ⟶ ⟵ ⟷ ⇒ ⇔ Δ ⚗ ° ⁺ ⁻ ²⁺ ²⁻ ³⁺ ³⁻ ⁿ⁺ ⁿ⁻ (s) (l) (g) (aq) ● ○ ⌬ ⬡ ⬢ ≡ = – · • ℃ ‰ Å pH pOH pKa pKb Kₐ K_b K_w K_sp K_c K_p E° ΔH° ΔS° ΔG° ΔH ΔS ΔG M mol/L g/mol [ ] ( ) ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉ ₁₀'],
+['العناصر الكيميائية (118)','Chemical elements (118)',EL]];
+function symUI(sc){const ta=E('textarea');ta.rows=2;ta.style.cssText='width:100%;font-size:22px;direction:ltr;text-align:left';ta.placeholder=AR?'اضغط على رمز لإضافته ثم انسخ':'Tap a symbol to add it, then copy';
+const bar=E('div');bar.style.cssText='display:flex;gap:8px;margin:6px 0';const cp=E('button',0,AR?'📋 نسخ':'📋 Copy'),cl=E('button',0,AR?'🗑 مسح':'🗑 Clear');cp.style.flex=cl.style.flex='1';bar.append(cp,cl);
+const sel=E('select');SYM.forEach((c,i)=>sel.add(new Option((AR?c[0]:c[1])+' ('+c[2].split(c[3]?';':' ').length+')',i)));
+const g=E('div');const draw=()=>{const c=SYM[sel.value],w=c[3];g.innerHTML='';g.style.cssText='display:grid;gap:6px;margin-top:8px;direction:ltr;grid-template-columns:repeat('+(w?1:6)+',1fr)';
+c[2].split(w?';':' ').forEach((s,i)=>{const b=E('button',0);b.textContent=s;b.style.cssText='padding:10px 2px;font-size:'+(w?'14':'20')+'px'+(w?';text-align:left':'');if(c[2]==EL)b.title=i+1;b.onclick=()=>{ta.value+=s};g.append(b)})};
+sel.onchange=draw;cl.onclick=()=>{ta.value=''};
+cp.onclick=()=>{ta.select();try{document.execCommand('copy')}catch(e){}if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ta.value).catch(()=>{});cp.textContent='✓';setTimeout(()=>{cp.textContent=AR?'📋 نسخ':'📋 Copy'},1200)};
+sc.append(ta,bar,sel,g);draw()}
+function calc(){cur='calc';A.innerHTML=`<div class=bar><button id=mn>☰</button><button id=hs>🕘</button><button id=pi style="display:none">📲</button><div class="bar-right"><span class="live-btn"><span class="live-dot"></span>LIVE</span><span class="dev-name">NIDAL WATFA</span></div><button id=sg>⚙</button></div><div class="app-title" id=apt></div><div class=dsp><div class=mm id=mm></div><div class=ex id=ex></div><div class=pv id=pv></div></div><div id=hp class=card style="display:none;max-height:35%;overflow:auto"></div><div class=kp id=kp></div>`;
+const U=ST.g('ui','classic'),MO=ST.g('mo',true),kp=Q('#kp'),rows=[...(MO&&U!='simple'?[['MC','M+','M−','MR']]:[]),...(U!='simple'?[['√','π','^','!']]:[]),['AC','()','%','÷'],['7','8','9','×'],['4','5','6','−'],['1','2','3','+'],['0','.','⌫','=']];
+rows.forEach(r=>{const g=E('div','g'+(['MC','√'].includes(r[0])?' s':''));r.forEach(k=>{const b=E('button',k=='='?'eq':k=='AC'?'ac':'÷×−+'.includes(k)||k=='%'?'o':'',k);b.onclick=()=>key(k);g.append(b)});kp.append(g)});if(U=='modern'){const sm=kp.querySelectorAll('.s');sm.forEach(x=>x.style.display='none');const t=E('button',0,'▾');t.style.cssText='display:block;margin:0 0 6px auto';t.onclick=()=>sm.forEach(x=>x.style.display=x.style.display?'':'none');kp.prepend(t)}
+Q('#apt').textContent=AR?'الحاسبة الشاملة':'Smart Calculator';Q('#mn').onclick=()=>go('home');if(dp)Q('#pi').style.display='';Q('#pi').onclick=ins;Q('#sg').onclick=()=>go('set');Q('#hs').onclick=()=>{const h=Q('#hp');h.style.display=h.style.display=='none'?'block':'none';hist()};sciPad();show()}
+function hist(){const h=Q('#hp');h.innerHTML=H.length?H.map((x,i)=>`<div class=res data-i=${i} style="cursor:pointer;direction:ltr"><span>${x.e}</span><b>= ${x.r}</b></div>`).join('')+'<button id=ch style="margin-top:8px">مسح السجل</button>':'<span style="color:var(--m)">لا توجد عمليات سابقة</span>';h.querySelectorAll('[data-i]').forEach(d=>d.onclick=()=>{ex=H[d.dataset.i].v;fr=1;show()});const c=Q('#ch');c&&(c.onclick=()=>{H=[];ST.s('hist',H);hist()})}
+function show(){const e=Q('#ex');if(!e)return;e.textContent=ex||'0';e.style.fontSize=ex.length>14?'30px':'44px';Q('#mm').textContent=mem?'M = '+fm(mem):'';let p='';if(/[+−×÷^%√!(]/.test(ex.replace(/^−/,'')))try{const r=ev(ex);ok(r)&&(p=fm(r))}catch(x){}Q('#pv').textContent=p}
+function key(k){const last=ex.slice(-1),OP='+−×÷^';
+if(k=='AC')ex='';else if(k=='⌫')ex=ex.slice(0,-1);
+else if(k=='='){try{const r=ev(ex);if(!ok(r))throw 0;H.unshift({e:ex,r:fm(r),v:sv(r)});H=H.slice(0,50);ST.s('hist',H);ex=sv(r);fr=1}catch(x){Q('#pv').textContent='خطأ في العملية';return}}
+else if(k=='MC'){mem=0;ST.s('mem',0)}else if(k=='M+'||k=='M−'){try{const r=ev(ex);if(ok(r)){mem+=k=='M+'?r:-r;ST.s('mem',mem)}}catch(x){}}
+else{if(fr&&(/^[\d.π√]$/.test(k)||k=='MR'||k=='()'))ex='';fr=0;
+if(k=='MR')ex+=sv(mem);else if(k=='()'){const o=(ex.match(/\(/g)||[]).length-(ex.match(/\)/g)||[]).length;ex+=o>0&&/[\d.)π%!]/.test(last)?')':'('}
+else if(OP.includes(k)){if(!ex&&k!='−')return;if(OP.includes(last))ex=ex.slice(0,-1);ex+=k}else if(k=='√')ex+='√(';else if(k=='.'){if(ex.split(/[^\d.]/).pop().includes('.'))return;ex+='.'}else{if(/^\d$/.test(k)&&/(^|[^\d.])0$/.test(ex))ex=ex.slice(0,-1);ex+=k}}
+show()}
+// ===== الرئيسية =====
+let cur='calc',Qs='',ed=0;
+const favs=()=>ST.g('fav',['sol','shp','pct','len','vol','wgt','spd','tmp','cur']);
+function go(v,t){A.innerHTML='';v=='calc'?calc():v=='home'?home():v=='set'?sett():tool(t)}
+
+function sciUI(sc){
+  const disc=E('div','disc',L('وحدة علمية تعليمية: قوانين ومعادلات فيزياء وكيمياء مع حساب تلقائي. يمكن توسيع قاعدة البيانات لاحقاً دون إعادة بناء التطبيق.'));
+  const si=E('input');si.placeholder=L('🔍 بحث بالاسم أو الرمز...');
+  const cats=E('select');cats.add(new Option(L('كل الفئات'),''));
+  const seen=new Set();SCI_DB.forEach(s=>{const c=AR?s.catAr:s.cat;if(!seen.has(c)){seen.add(c);cats.add(new Option(c,s.cat))}});
+  const list=E('div');const detail=E('div');
+  sc.append(disc,E('label',0,L('بحث')),si,E('label',0,L('الفئة')),cats,list,detail);
+  const draw=()=>{
+    list.innerHTML='';detail.innerHTML='';
+    const q=si.value.trim().toLowerCase(),cat=cats.value;
+    SCI_DB.filter(s=>{
+      if(cat&&s.cat!==cat)return false;
+      if(!q)return true;
+      return(s.name+s.nameEn+s.sym+s.cat+s.catAr).toLowerCase().includes(q);
+    }).forEach(s=>{
+      const d=E('div','sci-card',`<div><b>${AR?s.name:s.nameEn}</b> <small style="color:var(--m)">${AR?s.catAr:s.cat}</small></div><div class=sym>${s.sym}</div>`);
+      d.onclick=()=>openSci(s,detail,list);
+      list.append(d);
+    });
+  };
+  si.oninput=cats.onchange=draw;draw();
+}
+function openSci(s,detail,list){
+  list.style.display='none';
+  const V={};
+  detail.innerHTML='';
+  const bk=E('button',0,'← '+L('رجوع'));bk.onclick=()=>{detail.innerHTML='';list.style.display=''};detail.append(bk);
+  detail.append(E('h3',0,AR?s.name:s.nameEn));
+  detail.append(E('div','sym',s.sym));
+  detail.append(E('div','hint',AR?s.exp:s.exp));
+  const fx=E('div','card');detail.append(fx);
+  const rs=E('div','card');detail.append(rs);
+  s.vars.forEach(vr=>{
+    fx.append(E('label',0,`${vr.n} (${vr.u||'—'})`));
+    const inp=E('input');inp.type='number';inp.step='any';inp.placeholder=vr.def!=null?String(vr.def):'';
+    if(vr.def!=null){inp.value=vr.def;V[vr.k]=vr.def}
+    inp.oninput=()=>{V[vr.k]=inp.value===''?null:P(inp.value);upd()};
+    fx.append(inp);
+  });
+  const upd=()=>{
+    let o={};try{o=s.calc(V)||{}}catch(e){}
+    const rows=[];
+    s.vars.forEach(vr=>{
+      if(o[vr.k]!=null&&ok(o[vr.k]))rows.push([vr.n+` (${vr.u||''})`,fm(o[vr.k])]);
+    });
+    // ratio if two related results
+    rs.innerHTML=rows.length?rows.map(([l,x])=>`<div class=res><span>${l}</span><b>${x}</b></div>`).join('')+'<div class="hint">'+L('الحساب مبني على الصيغة المعروضة فقط.')+'</div>':'<div style="color:var(--m)">'+L('أدخل القيم المعروفة لحساب الباقي')+'</div>';
+  };
+  upd();
+}
+function labUI(sc){
+  const disc=E('div','disc','⚠️ '+L('معلومات تعليمية ومرجعية فقط — ليست تشخيصاً طبياً. النطاقات المرجعية تختلف بين المختبرات وحسب العمر والجنس والحالة الصحية. لا تفسّر النتيجة غير الطبيعية تلقائياً كمرض. استشر مختص رعاية صحية.'));
+  const si=E('input');si.placeholder=L('🔍 بحث بالاسم أو الاختصار...');
+  const list=E('div');const detail=E('div');
+  sc.append(disc,E('label',0,L('بحث')),si,list,detail);
+  const draw=()=>{
+    list.innerHTML='';detail.innerHTML='';
+    const q=si.value.trim().toLowerCase();
+    LAB_DB.filter(t=>!q||(t.name+t.nameEn+t.abbr).toLowerCase().includes(q)).forEach(t=>{
+      const d=E('div','lab-card',`<div><b>${AR?t.name:t.nameEn}</b> <span class=abbr>${t.abbr}</span></div><div class=hint>${t.unit} · ${t.purpose}</div>`);
+      d.onclick=()=>openLab(t,detail,list);
+      list.append(d);
+    });
+  };
+  si.oninput=draw;draw();
+}
+function openLab(t,detail,list){
+  list.style.display='none';
+  detail.innerHTML='';
+  const bk=E('button',0,'← '+L('رجوع'));bk.onclick=()=>{detail.innerHTML='';list.style.display=''};detail.append(bk);
+  detail.append(E('h3',0,AR?t.name:t.nameEn));
+  detail.append(E('div','abbr',t.abbr));
+  detail.append(E('div','hint',t.purpose+(t.note?' · '+t.note:'')));
+  const rng=[];
+  if(t.low!=null)rng.push(L('الحد الأدنى المرجعي')+': '+t.low);
+  if(t.high!=null)rng.push(L('الحد الأعلى المرجعي')+': '+t.high);
+  if(t.critLow!=null)rng.push(L('حرج منخفض')+': <'+t.critLow);
+  if(t.critHigh!=null)rng.push(L('حرج مرتفع')+': >'+t.critHigh);
+  detail.append(E('div','card',`<div class=res><span>${L('الوحدة')}</span><b>${t.unit||'—'}</b></div>`+rng.map(x=>`<div class=hint>${x}</div>`).join('')));
+  const fx=E('div','card');detail.append(fx);
+  fx.append(E('label',0,L('أدخل قيمة للمقارنة (اختياري)')));
+  const inp=E('input');inp.type='number';inp.step='any';fx.append(inp);
+  const rs=E('div');detail.append(rs);
+  const disc2=E('div','disc',L('النطاقات تقريبية وقد تختلف. هذه الأداة لا تقدّم تشخيصاً.'));detail.append(disc2);
+  inp.oninput=()=>{
+    const val=inp.value===''?null:P(inp.value);
+    const st=labStatus(t,val);
+    if(val==null||!ok(val)){rs.innerHTML='';return}
+    rs.innerHTML=`<div class=res><span>${L('القيمة')}</span><b>${fm(val)} ${t.unit} ${labBadge(st)}</b></div>`+labWarn(st);
+  };
+}
+
+
+// ===== أسعار المعادن =====
+const METALS_DB=[
+  {id:'xau',name:'الذهب',nameEn:'Gold',unit:'USD/oz',code:'XAU',def:4120,src:'Coinbase'},
+  {id:'xag',name:'الفضة',nameEn:'Silver',unit:'USD/oz',code:'XAG',def:58.9,src:'Coinbase'},
+  {id:'xpt',name:'البلاتين',nameEn:'Platinum',unit:'USD/oz',code:'XPT',def:1646,src:'Coinbase'},
+  {id:'xpd',name:'البلاديوم',nameEn:'Palladium',unit:'USD/oz',code:'XPD',def:1129,src:'Coinbase'},
+  {id:'cu',name:'النحاس',nameEn:'Copper',unit:'USD/lb',code:null,def:4.55,src:'default'},
+  {id:'sn',name:'القصدير',nameEn:'Tin',unit:'USD/kg',code:null,def:32.5,src:'default'},
+  {id:'al',name:'الألمنيوم',nameEn:'Aluminum',unit:'USD/kg',code:null,def:2.45,src:'default'},
+  {id:'zn',name:'الزنك',nameEn:'Zinc',unit:'USD/kg',code:null,def:2.85,src:'default'},
+  {id:'ni',name:'النيكل',nameEn:'Nickel',unit:'USD/kg',code:null,def:16.8,src:'default'}
+];
+async function fetchMetalPrices(){
+  const stored=ST.g('metals',{});
+  let source='Coinbase',okCount=0;
+  for(const m of METALS_DB){
+    if(!m.code)continue;
+    try{
+      const res=await fetch('https://api.coinbase.com/v2/prices/'+m.code+'-USD/spot',{cache:'no-store'});
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const data=await res.json();
+      const amt=parseFloat(data&&data.data&&data.data.amount);
+      if(amt>0){stored[m.id]=amt;okCount++;}
+    }catch(e){pushErr('warn','Metal '+m.code+': '+(e.message||e));}
+  }
+  if(okCount===0)throw new Error(L('تعذر جلب أسعار المعادن'));
+  ST.s('metals',stored);
+  ST.s('metalsMeta',{source,at:Date.now(),count:okCount});
+  return {stored,source,count:okCount};
+}
+function metalsUI(sc){
+  const disc=E('div','disc',L('أسعار تقريبية للمعادن الثمينة والصناعية. الأسعار الحية للذهب والفضة والبلاتين والبلاديوم من Coinbase. باقي المعادن قيم افتراضية قابلة للتعديل يدوياً. لا تُستخدم كمصدر تداول.'));
+  sc.append(disc);
+  const stEl=E('div','rate-status');
+  const meta=ST.g('metalsMeta',null);
+  if(meta&&meta.at){
+    const ago=Math.round((Date.now()-meta.at)/60000);
+    stEl.className='rate-status ok';
+    stEl.textContent=L('آخر تحديث')+': '+(meta.source||'')+' · '+(ago<1?L('الآن'):ago+' '+L('دقيقة'))+' · '+meta.count+' '+L('معادن');
+  }else stEl.textContent=L('اضغط تحديث لجلب الأسعار الحية (الذهب والفضة...)');
+  sc.append(stEl);
+  const liveBtn=E('button',0,'🔄 '+L('تحديث الأسعار من المصدر'));
+  liveBtn.style.cssText='width:100%;margin:8px 0 12px;background:var(--a);color:#111;font-weight:700;padding:14px;font-size:15px;border-radius:16px';
+  sc.append(liveBtn);
+  const list=E('div');sc.append(list);
+  const stored=()=>ST.g('metals',{});
+  const draw=()=>{
+    list.innerHTML='';
+    const s=stored();
+    METALS_DB.forEach(m=>{
+      const price=s[m.id]>0?s[m.id]:m.def;
+      const card=E('div','lab-card');
+      card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><b>${AR?m.name:m.nameEn}</b> <small class=abbr>${m.unit}</small></div><b style="direction:ltr;color:var(--a)">${fm(price)}</b></div>`;
+      const inp=E('input');inp.type='number';inp.step='any';inp.value=price;inp.style.marginTop='8px';
+      inp.onchange=()=>{const v=P(inp.value);if(ok(v)&&v>0){const st=stored();st[m.id]=v;ST.s('metals',st);draw()}};
+      card.append(E('label',0,L('تعديل يدوي')),inp);
+      list.append(card);
+    });
+  };
+  draw();
+  liveBtn.onclick=async()=>{
+    liveBtn.disabled=true;liveBtn.textContent='⏳ '+L('جاري الجلب...');
+    stEl.className='rate-status loading';stEl.textContent=L('جاري الجلب...');
+    try{
+      const r=await fetchMetalPrices();
+      stEl.className='rate-status ok';
+      stEl.textContent=L('تم التحديث')+': '+r.source+' · '+r.count+' '+L('معادن');
+      draw();
+    }catch(e){
+      stEl.className='rate-status';stEl.textContent=L('فشل التحديث')+': '+(e.message||e);
+      pushErr('error','metals: '+(e.message||e));
+    }
+    liveBtn.disabled=false;liveBtn.textContent='🔄 '+L('تحديث الأسعار من المصدر');
+  };
+}
+
+// ===== أسعار المحروقات والطاقة =====
+const FUEL_DB=[
+  {id:'wti',name:'نفط خام WTI',nameEn:'Crude Oil WTI',unit:'USD/bbl',def:72.5},
+  {id:'brent',name:'نفط خام برنت',nameEn:'Crude Oil Brent',unit:'USD/bbl',def:76.0},
+  {id:'gas',name:'بنزين (متوسط عالمي)',nameEn:'Gasoline (global avg)',unit:'USD/gal',def:3.45},
+  {id:'diesel',name:'ديزل (متوسط عالمي)',nameEn:'Diesel (global avg)',unit:'USD/gal',def:3.85},
+  {id:'natgas',name:'غاز طبيعي (Henry Hub)',nameEn:'Natural Gas',unit:'USD/MMBtu',def:2.65},
+  {id:'lpg',name:'غاز البترول المسال LPG',nameEn:'LPG',unit:'USD/ton',def:580},
+  {id:'coal',name:'فحم حراري',nameEn:'Thermal Coal',unit:'USD/ton',def:115}
+];
+function fuelUI(sc){
+  const disc=E('div','disc',L('أسعار تقريبية عالمية للمحروقات ومصادر الطاقة. الأسعار المحلية تختلف كثيراً حسب البلد والضرائب. يمكنك تعديلها يدوياً. المصدر: قيم مرجعية قابلة للتحديث اليدوي (لا يوجد مصدر مجاني موثوق بدون مفتاح API لجميع هذه العناصر).'));
+  sc.append(disc);
+  const stEl=E('div','rate-status');
+  const meta=ST.g('fuelMeta',null);
+  if(meta&&meta.at){
+    const ago=Math.round((Date.now()-meta.at)/60000);
+    stEl.className='rate-status ok';
+    stEl.textContent=L('آخر تعديل يدوي')+': '+(ago<1?L('الآن'):ago+' '+L('دقيقة'));
+  }else stEl.textContent=L('قيم افتراضية — عدّلها حسب السوق المحلي أو العالمي');
+  sc.append(stEl);
+  const list=E('div');sc.append(list);
+  const stored=()=>ST.g('fuel',{});
+  const draw=()=>{
+    list.innerHTML='';
+    const s=stored();
+    FUEL_DB.forEach(m=>{
+      const price=s[m.id]>0?s[m.id]:m.def;
+      const card=E('div','lab-card');
+      card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><b>${AR?m.name:m.nameEn}</b> <small class=abbr>${m.unit}</small></div><b style="direction:ltr;color:var(--a)">${fm(price)}</b></div>`;
+      const inp=E('input');inp.type='number';inp.step='any';inp.value=price;inp.style.marginTop='8px';
+      inp.onchange=()=>{const v=P(inp.value);if(ok(v)&&v>0){const st=stored();st[m.id]=v;ST.s('fuel',st);ST.s('fuelMeta',{at:Date.now()});stEl.className='rate-status ok';stEl.textContent=L('تم الحفظ محلياً');draw()}};
+      card.append(E('label',0,L('تعديل يدوي')),inp);
+      list.append(card);
+    });
+  };
+  draw();
+  const note=E('div','hint',L('💡 نصيحة: للمقارنة المحلية أدخل سعر اللتر/الغالون في بلدك يدوياً.'));
+  sc.append(note);
+}
+
+
+function home(){cur='home';const fv=favs();A.innerHTML=`<div class=bar><button id=bk>${AR?'→':'←'}</button><h1>الأدوات</h1><div class="bar-right"><span class="live-btn"><span class="live-dot"></span>LIVE</span><span class="dev-name">NIDAL WATFA</span></div><button id=sg>⚙</button></div><div class=sc id=sc></div><button class=fab id=fb>🧮</button>`;
+Q('#bk').onclick=Q('#fb').onclick=()=>go('calc');Q('#sg').onclick=()=>go('set');const sc=Q('#sc'),si=E('input');si.placeholder=L('🔍 بحث');si.value=Qs;sc.append(si);const body=E('div');sc.append(body);
+const row=t=>{const d=E('div','tl',`<span class=ic>${t.ic}</span><span class=n>${t.name}<small>${t.cat}</small></span><span class=st>${fv.includes(t.id)?'★':'☆'}</span>`);d.onclick=()=>go('tool',t);d.querySelector('.st').onclick=e=>{e.stopPropagation();const f=favs(),i=f.indexOf(t.id);i<0?f.push(t.id):f.splice(i,1);ST.s('fav',f);const y=sc.scrollTop;home();Q('#sc').scrollTop=y};return d};
+const draw=()=>{Qs=si.value.trim();body.innerHTML='';if(Qs){T.filter(t=>(t.name+L(t.name)+t.cat+L(t.cat)).toLowerCase().includes(Qs.toLowerCase())).forEach(t=>body.append(row(t)));return}
+const h=E('h3',0,'⭐ المفضلة (☆ للإضافة) — <span style="cursor:pointer;color:var(--a)">✏️ ترتيب</span>');h.querySelector('span').onclick=()=>{ed=!ed;home()};body.append(h);const g=E('div','fav');fv.forEach((id,k)=>{const t=T.find(t=>t.id==id);if(!t)return;const d=E('div',0,`<b>${t.ic}</b>${t.name}`);d.onclick=()=>ed||go('tool',t);if(ed){const m=E('div',0,'<button data-d=-1>▶</button> <button data-d=1>◀</button>');m.onclick=e=>{e.stopPropagation();const b=e.target.closest('button');if(!b)return;const j=k+ +b.dataset.d,f=favs();if(j<0||j>=f.length)return;[f[k],f[j]]=[f[j],f[k]];ST.s('fav',f);home()};d.append(m)}g.append(d)});body.append(g);
+[AL,GE,UN,FI,HE,DA,SC,MD,MK,OT,DV].forEach(c=>{body.append(E('h3',0,c));T.filter(t=>t.cat==c).forEach(t=>body.append(row(t)))})};si.oninput=draw;draw()}
+// ===== الأداة =====
+const tday=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+function tool(t){cur='tool';const f=favs().includes(t.id);A.innerHTML=`<div class=bar><button id=bk>${AR?'→':'←'}</button><h1>${t.name}</h1><div class="bar-right"><span class="live-btn"><span class="live-dot"></span>LIVE</span><span class="dev-name">NIDAL WATFA</span></div><button id=sr>${f?'★':'☆'}</button></div><div class=sc id=sc></div><button class=fab id=fb>🧮</button>`;
+Q('#bk').onclick=()=>go('home');Q('#fb').onclick=()=>go('calc');Q('#sr').onclick=()=>{const a=favs(),i=a.indexOf(t.id);i<0?a.push(t.id):a.splice(i,1);ST.s('fav',a);Q('#sr').textContent=i<0?'★':'☆'};
+if(t.id=='sym'){symUI(Q('#sc'));return}if(t.id=='sci'){sciUI(Q('#sc'));return}if(t.id=='lab'){labUI(Q('#sc'));return}if(t.id=='metals'){metalsUI(Q('#sc'));return}if(t.id=='fuel'){fuelUI(Q('#sc'));return}t.conv?conv(t,Q('#sc')):form(t,Q('#sc'))}
+function form(t,sc){let mi=0;const V={},top=E('div'),fx=E('div'),rs=E('div','card');sc.append(top,fx,rs);
+if(t.btn){const b=E('button',0,t.btn);b.style.width='100%';b.style.marginTop='12px';b.onclick=()=>upd();sc.insertBefore(b,rs)}
+if(t.modes.length>1){const s=E('select');t.modes.forEach((m,i)=>s.add(new Option(m.n,i)));s.onchange=()=>{mi=+s.value;draw()};top.append(E('label',0,'النوع'),s)}
+const upd=()=>{const m=t.modes[mi],v={};m.f.forEach(([id,,ty])=>{const x=V[id];v[id]=ty=='s'?+(x||0):ty=='d'?(x?new Date(x+'T00:00'):null):ty=='dt'?(x?new Date(x):null):ty=='t'?(x||''):P(x==null?'':x)});let r;try{r=m.c(v)}catch(e){}rs.innerHTML=r&&r.length?r.map(([l,x])=>`<div class=res><span>${l}</span><b>${x}</b></div>`).join(''):'<div style="color:var(--m)">أدخل القيم لعرض النتيجة</div>'};
+const draw=()=>{const m=t.modes[mi];fx.innerHTML='';m.h&&fx.append(E('div','hint',m.h));m.f.forEach(([id,l,ty,x])=>{fx.append(E('label',0,l));let i;if(ty=='s'){i=E('select');x.forEach((o,k)=>i.add(new Option(o,k)));i.value=V[id]||0}else{i=E('input');if(ty=='d')i.type='date';else if(ty=='dt'){i.type='datetime-local';V[id]==null&&(V[id]=tday()+'T12:00')}else{i.type='text';ty!='t'&&(i.inputMode='decimal')}i.value=V[id]==null?'':V[id]}i.oninput=i.onchange=()=>{V[id]=i.value;upd()};fx.append(i)});upd()};draw()}
+function conv(t,sc){let u=t.conv;const cu=()=>{const r=ST.g('rt',{});u=CUR.map(([n,x])=>[n,1/(r[n]>0?r[n]:x)])};t.id=='cur'&&cu();
+
+// --- زر تحديث الأسعار من المصدر (أعلى الشاشة لسهولة الوصول) ---
+let liveBtn=null,stEl=null;
+if(t.id=='cur'){
+  const meta=ST.g('rtMeta',null);
+  stEl=E('div','rate-status');
+  if(meta&&meta.at){
+    const ago=Math.round((Date.now()-meta.at)/60000);
+    stEl.className='rate-status ok';
+    stEl.textContent=L('آخر تحديث')+': '+(meta.source||'')+' · '+(meta.date||'')+' · '+(ago<1?L('الآن'):ago+' '+L('دقيقة'));
+  }else{
+    stEl.textContent=L('الأسعار المحلية الافتراضية — اضغط للتحديث من مصدر رسمي');
+  }
+  sc.append(stEl);
+  liveBtn=E('button',0,'🔄 '+L('تحديث الأسعار من المصدر'));
+  liveBtn.id='btnLiveRates';
+  liveBtn.style.cssText='width:100%;margin:8px 0 12px;background:var(--a);color:#111;font-weight:700;padding:14px;font-size:15px;border-radius:16px';
+  sc.append(liveBtn);
+}
+
+const inp=E('input'),sel=E('select'),out=E('div','card');inp.type='text';inp.inputMode='decimal';inp.value='1';u.forEach(([n],i)=>sel.add(new Option(n,i)));
+sc.append(E('label',0,'القيمة'),inp,E('label',0,'من'),sel,out);
+const upd=()=>{const x=P(inp.value),f=u[sel.value][1];if(!ok(x)){out.innerHTML='<span style="color:var(--m)">أدخل قيمة</span>';return}const b=typeof f=='number'?x*f:f[0](x);out.innerHTML=u.map(([n,a],i)=>i==+sel.value?'':`<div class=res><span>${n}</span><b>${fm(typeof a=='number'?b/a:a[1](b))}</b></div>`).join('')};
+inp.oninput=sel.onchange=upd;upd();
+
+if(t.id=='cur'){
+  const refreshInputs=()=>{
+    const box=Q('#curManualRates');
+    if(!box)return;
+    box.querySelectorAll('input').forEach((inp,i)=>{const n=CUR[i][0];inp.value=ST.g('rt',{})[n]||CUR[i][1]});
+  };
+  liveBtn.onclick=async()=>{
+    liveBtn.disabled=true;
+    liveBtn.textContent='⏳ '+L('جاري الجلب...');
+    stEl.className='rate-status loading';
+    stEl.textContent=L('جاري الجلب...');
+    try{
+      const r=await fetchLiveRates();
+      cu();
+      // rebuild select options with same selection
+      const prev=+sel.value;
+      sel.innerHTML='';
+      u.forEach(([n],i)=>sel.add(new Option(n,i)));
+      sel.value=String(prev);
+      upd();
+      refreshInputs();
+      stEl.className='rate-status ok';
+      stEl.textContent=L('تم التحديث')+': '+r.source+(r.date?' · '+r.date:'')+' · '+new Date().toLocaleTimeString(LC,{hour12:false});
+      liveBtn.textContent='✓ '+L('تم التحديث')+' — 🔄 '+L('تحديث مرة أخرى');
+      logInfo('Currency rates updated via '+r.source);
+    }catch(e){
+      stEl.className='rate-status err';
+      stEl.textContent=L('فشل التحديث')+': '+(e.message||e);
+      liveBtn.textContent='🔄 '+L('تحديث الأسعار من المصدر');
+      pushErr('error','fetchLiveRates: '+(e.message||e));
+    }
+    liveBtn.disabled=false;
+    setTimeout(()=>{if(liveBtn&&!liveBtn.disabled)liveBtn.textContent='🔄 '+L('تحديث الأسعار من المصدر')},4000);
+  };
+  const d=E('details','card');d.id='curManualRates';
+  d.innerHTML='<summary>'+L('تعديل يدوي / عرض الأسعار (مقابل 1 دولار)')+'</summary><div class=hint>'+L('المصدر الأساسي: Frankfurter المبني على بيانات البنك المركزي الأوروبي (ECB). يُستخدم مصدر احتياطي لتغطية العملات غير المدرجة في ECB. يمكنك التعديل يدوياً أيضاً.')+'</div>';
+  const r=ST.g('rt',{});
+  CUR.forEach(([n,x,code])=>{
+    const i=E('input');i.value=r[n]||x;i.inputMode='decimal';
+    i.oninput=()=>{const v=P(i.value);if(v>0){const q=ST.g('rt',{});q[n]=v;ST.s('rt',q);cu();upd()}};
+    d.append(E('label',0,n+(code?' ('+code+')':'')),i);
+  });
+  sc.append(d);
+}
+
+}
+
+function sett(){cur='set';A.innerHTML=`<div class=bar><button id=bk>${AR?'→':'←'}</button><h1>الإعدادات</h1><div class="bar-right"><span class="live-btn"><span class="live-dot"></span>LIVE</span><span class="dev-name">NIDAL WATFA</span></div></div><div class=sc><div id=ob></div><button id=ib style="width:100%;background:var(--a);color:#111;margin:14px 0;padding:14px">📲 تثبيت التطبيق</button><div id=ih class=card style="display:none"></div><h3>مشاركة التطبيق / Share</h3>
+<div class="card">
+<button type="button" id=btnShare style="width:100%;background:var(--a);color:#111;padding:14px;font-weight:700">📤 مشاركة التطبيق</button>
+<div id=shareMsg class=hint style="margin-top:8px"></div>
+</div>
+<h3>المطوّر / Contact Developer</h3>
+<div class="card contact-card">
+<div style="font-weight:600;margin-bottom:8px">NIDAL WATFA</div>
+<div class=hint style="line-height:1.7">
+📧 <a href="mailto:nidalwatfa99@gmail.com">nidalwatfa99@gmail.com</a><br>
+🐙 <a href="https://github.com/danial56hd-wq" target="_blank" rel="noopener">GitHub</a> · 
+<a href="https://gitlab.com/-/user_settings/profile" target="_blank" rel="noopener">GitLab</a> · 
+<a href="https://codeberg.org/nidalwatfa" target="_blank" rel="noopener">Codeberg</a><br>
+💼 <a href="https://www.linkedin.com/in/nidal-watfa-a91720301" target="_blank" rel="noopener">LinkedIn</a> · 
+<a href="https://x.com/NidalWatfa12501" target="_blank" rel="noopener">X</a><br>
+📱 <a href="https://t.me/nidal12watfa" target="_blank" rel="noopener">Telegram @nidal12watfa</a><br>
+🆔 <a href="https://orcid.org/0009-0003-2462-6630" target="_blank" rel="noopener">ORCID</a>
+</div>
+<a href="mailto:nidalwatfa99@gmail.com" style="display:block;margin-top:12px"><button type="button" style="width:100%;background:var(--a);color:#111">✉️ مراسلة المطوّر</button></a>
+</div>
+<h3>🛠 أدوات المطوّر / Developer Tools</h3>
+<div class="card">
+<div class="dev-grid">
+<button type="button" id=devConsole>📋 وحدة التحكم</button>
+<button type="button" id=devInfo>ℹ️ معلومات التطبيق</button>
+<button type="button" id=devRates>💱 تحديث أسعار الصرف</button>
+<button type="button" id=devExport>📤 تصدير الإعدادات</button>
+<button type="button" id=devSW>⟳ تحديث Service Worker</button>
+<button type="button" id=devToggleC>👁 زر Console</button>
+</div>
+<div id=devOut class=hint style="margin-top:8px;word-break:break-all"></div>
+</div>
+<button id=ds style="width:100%;margin:0 0 14px;padding:14px">🖥 اختصار على سطح المكتب</button><button id=cl>مسح السجل والإعدادات المحفوظة</button></div>`;
+Q('#bk').onclick=()=>go('calc');{const b=Q('#ob');grp(b,'الواجهة','ui',[['simple','بسيط'],['classic','كلاسيكي'],['modern','حديث']],'classic');tg(b,'ذاكرة (تفعيل)','mo',true);grp(b,'السمة','th',[['dark','افتراضي'],['light','أبيض'],['amoled','أموليد']],'dark');tg(b,'الوضع المظلم تلقائي (حسب النظام)','auto',false)}
+const lg=E('select');[['auto','تلقائي (لغة الجهاز)'],['ar','العربية'],['en','English']].forEach(([k,n])=>lg.add(new Option(n,k)));lg.value=ST.g('lg','auto');lg.onchange=()=>{ST.s('lg',lg.value);location.reload()};Q('#ob').append(E('label',0,'اللغة'),lg);
+if(matchMedia('(display-mode:standalone)').matches)Q('#ib').style.display='none';
+Q('#ib').onclick=()=>{if(dp){ins();return}const h=Q('#ih');h.style.display='block';h.innerHTML=["🖥 الحاسوب (Chrome / Edge): اضغط أيقونة التثبيت ⊕ في شريط العنوان، أو القائمة ⋮ ← «تثبيت التطبيق».", "🤖 أندرويد (Chrome): القائمة ⋮ ← «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».", "🍎 آيفون / آيباد (Safari): زر المشاركة ⬆ ← «إضافة إلى الشاشة الرئيسية».", "⚠️ يلزم فتح التطبيق من رابط https أو من localhost (انظر README) كي يظهر التثبيت."].map(x=>`<div class=hint>${x}</div>`).join('')};
+Q('#ds').onclick=()=>{if(dp){ins();return}const u=location.href.split('#')[0],ua=navigator.userAgent,nm=AR?'الحاسبة الشاملة':'Smart Calculator';let c,f,t='text/plain';
+if(/Windows/i.test(ua)){c='[InternetShortcut]\r\nURL='+u+'\r\n';f=nm+'.url'}else if(/Mac/i.test(ua)&&!/iPhone|iPad/i.test(ua)){c='<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>URL</key><string>'+u+'</string></dict></plist>';f=nm+'.webloc'}else if(/Linux/i.test(ua)&&!/Android/i.test(ua)){c='[Desktop Entry]\nType=Link\nName='+nm+'\nURL='+u+'\nIcon='+new URL('icon-512.png',u).href+'\n';f=nm+'.desktop'}
+if(!c){const h=Q('#ih');h.style.display='block';h.textContent=AR?'على الهاتف: من قائمة المتصفح اختر «إضافة إلى الشاشة الرئيسية».':'On mobile: use the browser menu → "Add to Home screen".';return}
+const a=E('a');a.href=URL.createObjectURL(new Blob([c],{type:t}));a.download=f;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);const h=Q('#ih');h.style.display='block';h.textContent=AR?'تم تنزيل الاختصار — انقله إلى سطح المكتب. للحصول على أيقونة التطبيق الكاملة استخدم زر «تثبيت التطبيق».':'Shortcut downloaded — move it to your desktop. For the full app icon use "Install app".'};
+Q('#cl').onclick=()=>{['hist','mem','fav','rt','rtMeta','errlog','metals','metalsMeta','fuel','fuelMeta'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});H=[];mem=0;ERR_LOG.length=0;go('calc')}
+const shareBtn=Q('#btnShare');
+if(shareBtn){
+  shareBtn.onclick=async()=>{
+    const msg=Q('#shareMsg');
+    const shareData={
+      title: AR?'الحاسبة الشاملة | Smart Calculator':'Smart Calculator | الحاسبة الشاملة',
+      text: AR?'جرّب الحاسبة الشاملة — أدوات علمية ومالية وصحية ومختبر + أسعار معادن ومحروقات':'Try Smart Calculator — scientific, finance, health, lab tools + metal & fuel prices',
+      url: location.href
+    };
+    try{
+      if(navigator.share){
+        await navigator.share(shareData);
+        if(msg)msg.textContent=L('تمت المشاركة');
+      }else if(navigator.clipboard){
+        await navigator.clipboard.writeText(shareData.title+'\n'+shareData.text+'\n'+shareData.url);
+        if(msg)msg.textContent=L('تم نسخ الرابط إلى الحافظة');
+      }else{
+        if(msg)msg.textContent=location.href;
+      }
+    }catch(e){
+      if(e.name!=='AbortError' && msg)msg.textContent=L('تعذرت المشاركة')+': '+(e.message||'');
+    }
+  };
+}
+const dout=Q('#devOut');
+const showDev=m=>{if(dout)dout.innerHTML=m};
+Q('#devConsole')&&(Q('#devConsole').onclick=()=>toggleConsole(true));
+Q('#devInfo')&&(Q('#devInfo').onclick=()=>{
+  const meta=ST.g('rtMeta',null);
+  const sw=navigator.serviceWorker&&navigator.serviceWorker.controller?'active':'none';
+  let storage='?';
+  try{const n=JSON.stringify(localStorage).length;storage=(n/1024).toFixed(1)+' KB'}catch(e){}
+  showDev([
+    'App: Smart Calculator / الحاسبة الشاملة',
+    'Developer: NIDAL WATFA',
+    'Lang: '+(AR?'ar':'en')+' · Theme: '+ST.g('th','dark'),
+    'UI: '+ST.g('ui','classic')+' · Memory: '+ST.g('mo',true),
+    'Service Worker: '+sw,
+    'localStorage: '+storage,
+    'Error log: '+ERR_LOG.length+' entries',
+    'Rates: '+(meta?meta.source+' @ '+meta.date:'default'),
+    'Online: '+navigator.onLine,
+    'UA: '+navigator.userAgent.slice(0,80)
+  ].map(x=>'<div>'+x+'</div>').join(''));
+  logInfo('App info viewed');
+});
+Q('#devRates')&&(Q('#devRates').onclick=async()=>{
+  showDev(L('جاري الجلب...'));
+  try{
+    const r=await fetchLiveRates();
+    showDev('<span class="rate-status ok">✓ '+L('تم التحديث')+': '+r.source+(r.date?' · '+r.date:'')+' · '+Object.keys(r.rates).length+' currencies</span>');
+  }catch(e){showDev('<span class="rate-status err">✗ '+(e.message||e)+'</span>');pushErr('error',e.message||e)}
+});
+Q('#devExport')&&(Q('#devExport').onclick=()=>{
+  const data={fav:ST.g('fav',[]),th:ST.g('th','dark'),ui:ST.g('ui','classic'),lg:ST.g('lg','auto'),rt:ST.g('rt',{}),rtMeta:ST.g('rtMeta',null),exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=E('a');a.href=URL.createObjectURL(blob);a.download='calculator-settings.json';a.click();
+  showDev(L('تم التصدير'));logInfo('Settings exported');
+});
+Q('#devSW')&&(Q('#devSW').onclick=async()=>{
+  if(!('serviceWorker' in navigator)){showDev('SW not supported');return}
+  try{
+    const regs=await navigator.serviceWorker.getRegistrations();
+    for(const r of regs)await r.update();
+    showDev(L('تم طلب تحديث Service Worker')+' ('+regs.length+')');
+    logInfo('SW update requested');
+  }catch(e){showDev(String(e));pushErr('error',e.message||e)}
+});
+Q('#devToggleC')&&(Q('#devToggleC').onclick=()=>{
+  const v=!ST.g('showConsole',false);ST.s('showConsole',v);updateConsoleBadge();
+  showDev(v?L('زر Console ظاهر'):L('زر Console مخفي'));
+});
+ensureConsoleUI();
+}
+const D={};`أسعار السوق|Market Prices
+معادن|metals
+🖥 اختصار على سطح المكتب|🖥 Desktop shortcut
+أسعار المعادن|Metal Prices
+أسعار المحروقات والطاقة|Fuel & Energy Prices
+تحديث الأسعار من المصدر|Update prices from source
+جاري الجلب...|Fetching...
+تم التحديث|Updated
+فشل التحديث|Update failed
+تعديل يدوي|Manual edit
+اضغط تحديث لجلب الأسعار الحية (الذهب والفضة...)|Press update to fetch live prices (gold, silver...)
+أسعار تقريبية للمعادن الثمينة والصناعية. الأسعار الحية للذهب والفضة والبلاتين والبلاديوم من Coinbase. باقي المعادن قيم افتراضية قابلة للتعديل يدوياً. لا تُستخدم كمصدر تداول.|Approximate prices for precious and industrial metals. Live prices for gold, silver, platinum and palladium from Coinbase. Other metals are editable defaults. Not for trading.
+أسعار تقريبية عالمية للمحروقات ومصادر الطاقة. الأسعار المحلية تختلف كثيراً حسب البلد والضرائب. يمكنك تعديلها يدوياً. المصدر: قيم مرجعية قابلة للتحديث اليدوي (لا يوجد مصدر مجاني موثوق بدون مفتاح API لجميع هذه العناصر).|Approximate global fuel and energy prices. Local prices vary greatly by country and taxes. You can edit them manually. Reference values only (no free reliable API without keys for all items).
+قيم افتراضية — عدّلها حسب السوق المحلي أو العالمي|Default values — edit for local or global market
+آخر تعديل يدوي|Last manual edit
+تم الحفظ محلياً|Saved locally
+نصيحة: للمقارنة المحلية أدخل سعر اللتر/الغالون في بلدك يدوياً.|Tip: for local comparison enter the liter/gallon price in your country manually.
+مشاركة التطبيق|Share App
+تمت المشاركة|Shared
+تم نسخ الرابط إلى الحافظة|Link copied to clipboard
+تعذرت المشاركة|Share failed
+جرّب الحاسبة الشاملة — أدوات علمية ومالية وصحية ومختبر + أسعار معادن ومحروقات|Try Smart Calculator — scientific, finance, health, lab tools + metal & fuel prices
+الأدوات|Tools
+الإعدادات|Settings
+المعادلات العلمية|Scientific Equations
+تحاليل المختبر|Lab Tests
+النسب والتوافق|Ratios & Compatibility
+العلوم والرياضيات|Science & Mathematics
+المختبر الطبي|Medical Laboratory
+بحث|Search
+الفئة|Category
+كل الفئات|All categories
+رجوع|Back
+أدخل القيم المعروفة لحساب الباقي|Enter known values to compute the rest
+الحساب مبني على الصيغة المعروضة فقط.|Calculation is based only on the displayed formula.
+طبيعي|Normal
+منخفض|Low
+مرتفع|High
+حرج|Critical
+الوحدة|Unit
+أدخل قيمة للمقارنة (اختياري)|Enter a value to compare (optional)
+القيمة|Value
+الحد الأدنى المرجعي|Reference low
+الحد الأعلى المرجعي|Reference high
+حرج منخفض|Critical low
+حرج مرتفع|Critical high
+مراسلة المطوّر|Email Developer
+زيادة|Increase
+نقصان|Decrease
+ثابت|Unchanged
+وحدة علمية تعليمية: قوانين ومعادلات فيزياء وكيمياء مع حساب تلقائي. يمكن توسيع قاعدة البيانات لاحقاً دون إعادة بناء التطبيق.|Educational science module: physics and chemistry laws with auto-calculation. Database can be expanded later without rebuilding the app.
+معلومات تعليمية ومرجعية فقط — ليست تشخيصاً طبياً. النطاقات المرجعية تختلف بين المختبرات وحسب العمر والجنس والحالة الصحية. لا تفسّر النتيجة غير الطبيعية تلقائياً كمرض. استشر مختص رعاية صحية.|Educational reference only — not a medical diagnosis. Reference ranges vary by lab, age, sex, and health status. An abnormal result is not automatically a disease. Consult a healthcare professional.
+قيمة حرجة: يُنصح بمراجعة مختص رعاية صحية فوراً. هذه المعلومات تعليمية وليست تشخيصاً طبياً.|Critical value: seek qualified healthcare advice immediately. This is educational, not a diagnosis.
+القيمة خارج النطاق المرجعي الشائع. راجع مختصاً للتفسير. النطاقات تختلف بين المختبرات.|Value outside common reference range. Consult a professional. Ranges vary by laboratory.
+ضمن النطاق المرجعي التقريبي.|Within approximate reference range.
+النطاقات تقريبية وقد تختلف. هذه الأداة لا تقدّم تشخيصاً.|Ranges are approximate and may vary. This tool does not provide a diagnosis.
+وحدة التحكم|Console
+مسح|Clear
+لا توجد سجلات|No logs
+أخطاء مسجّلة|Logged errors
+أدوات المطوّر|Developer Tools
+معلومات التطبيق|App Info
+تحديث أسعار الصرف|Update Exchange Rates
+تصدير الإعدادات|Export Settings
+تحديث Service Worker|Update Service Worker
+إخفاء زر Console|Hide Console Button
+إظهار زر Console|Show Console Button
+زر Console ظاهر|Console button visible
+زر Console مخفي|Console button hidden
+آخر تحديث|Last update
+الآن|just now
+دقيقة|min
+الأسعار المحلية الافتراضية — اضغط للتحديث من مصدر رسمي|Default local rates — tap to refresh from official source
+جاري الجلب...|Fetching...
+تم التحديث|Updated
+فشل التحديث|Update failed
+تعذر جلب الأسعار من الشبكة|Could not fetch rates from network
+تحديث الأسعار من مصدر حي (ECB)|Refresh rates from live source (ECB)
+تعديل يدوي / عرض الأسعار (مقابل 1 دولار)|Manual edit / view rates (per 1 USD)
+المصدر الأساسي: Frankfurter المبني على بيانات البنك المركزي الأوروبي (ECB). يُستخدم مصدر احتياطي لتغطية العملات غير المدرجة في ECB. يمكنك التعديل يدوياً أيضاً.|Primary source: Frankfurter based on European Central Bank (ECB) data. A fallback covers currencies not listed by ECB. You can also edit manually.
+تم التصدير|Exported
+تم طلب تحديث Service Worker|Service Worker update requested
+تحديث الأسعار من المصدر|Refresh rates from source
+تحديث مرة أخرى|Refresh again
+مرحباً|Welcome
+اختر الواجهة|Choose interface
+اختر السمة|Choose theme
+الواجهة|Interface
+بسيط|Simple
+كلاسيكي|Classic
+حديث|Modern
+ذاكرة (تفعيل)|Memory (enabled)
+السمات|Themes
+السمة|Theme
+افتراضي|Default
+أبيض|White
+أموليد|AMOLED
+الوضع المظلم تلقائي (حسب النظام)|Auto dark mode (follow system)
+متابعة|Continue
+اللغة|Language
+تلقائي (لغة الجهاز)|Auto (device language)
+📲 تثبيت التطبيق|📲 Install app
+مسح السجل والإعدادات المحفوظة|Clear history and saved settings
+لا توجد عمليات سابقة|No previous calculations
+مسح السجل|Clear history
+خطأ في العملية|Calculation error
+🔍 بحث|🔍 Search
+⭐ المفضلة (☆ للإضافة) —|⭐ Favorites (☆ to add) —
+✏️ ترتيب|✏️ Reorder
+أدخل القيم لعرض النتيجة|Enter values to see the result
+أدخل قيمة|Enter a value
+النوع|Type
+القيمة|Value
+تعديل أسعار الصرف (مقابل 1 دولار)|Edit exchange rates (per 1 USD)
+الأسعار تقريبية وغير مباشرة؛ عدّلها حسب سعر اليوم وسيتم حفظها.|Rates are approximate and offline; edit them to today's rates and they will be saved.
+→|←
+▶|◀
+◀|▶
+الجبر|Algebra
+علم الهندسة|Geometry
+محولات الوحدات|Unit converters
+المعاملات المالية|Financial
+الصحة|Health
+التاريخ والوقت|Date & time
+أخرى|Other
+النسبة المئوية|Percentage
+معدل|Average
+تناسب|Proportion
+نسبة|Ratio
+المعادلات|Equations
+ع.م.أ. / م.م.أ|GCD / LCM
+التوافيق|Combinations
+فاحص الأعداد الأولية|Prime number checker
+مولد الأرقام|Number generator
+الأشكال|Shapes
+الأجسام|Solids
+التسارع|Acceleration
+الزاوية|Angle
+مساحة|Area
+الطهي|Cooking
+تخزين البيانات|Data storage
+نقل البيانات|Data transfer
+الطاقة|Energy
+قوة|Force
+الوقود|Fuel economy
+الطول|Length
+الأساس العددي|Number base
+القدرة|Power
+الضغط|Pressure
+مقاس الخاتم|Ring size
+الأرقام الرومانية|Roman numerals
+مقاس الحذاء|Shoe size
+السرعة|Speed
+درجة الحرارة|Temperature
+وقت|Time
+عزم الدوران|Torque
+الحجم|Volume
+التدفق الحجمي|Volumetric flow
+الوزن|Weight
+تحويل العملات|Currency converter
+سعر الوحدة|Unit price
+ضريبة المبيعات|Sales tax
+الإكرامية|Tip
+القرض|Loan
+الفائدة|Interest
+مؤشر كتلة الجسم|BMI
+حرق السعرات الحرارية|Calorie burn
+دهون الجسم|Body fat
+حاسبة العمر|Age calculator
+الجمع والطرح|Add / subtract
+الفاصل الزمني|Time interval
+المسافة المقطوعة|Distance traveled
+قانون أوم|Ohm's law
+X% من Y|X% of Y
+X كم % من Y|X is what % of Y
+نسبة التغير|Percentage change
+زيادة / خصم|Increase / discount
+النسبة %|Percent %
+العدد|Number
+من|From
+إلى|To
+العملية|Operation
+زيادة|Increase
+خصم|Discount
+النتيجة|Result
+التغير %|Change %
+الفرق|Difference
+الناتج|Output
+قيمة النسبة|Percent value
+الأعداد (افصل بينها بمسافة أو فاصلة)|Numbers (separate with space or comma)
+المعدل|Average
+الوسيط|Median
+المجموع|Sum
+الأصغر|Min
+الأكبر|Max
+أ|A
+ب|B
+ج|C
+د|D
+أ : ب = ج : د — اترك خانة واحدة فارغة|A : B = C : D — leave one field empty
+القيمة المجهولة|Unknown value
+التناسب|Proportion
+القيمة الأولى|First value
+القيمة الثانية|Second value
+النسبة المبسطة|Simplified ratio
+أ ÷ ب|A ÷ B
+أ من المجموع %|A of total %
+خطية: ax + b = 0|Linear: ax + b = 0
+تربيعية: ax² + bx + c = 0|Quadratic: ax² + bx + c = 0
+نظام معادلتين|System of two equations
+لا حل وحيد|No unique solution
+لا يوجد حل وحيد|No unique solution
+لا حل|No solution
+المميز Δ|Discriminant Δ
+الجذران (مركبان)|Roots (complex)
+a₁x + b₁y = c₁ ، a₂x + b₂y = c₂|a₁x + b₁y = c₁ , a₂x + b₂y = c₂
+الأعداد الصحيحة (افصل بمسافة)|Integers (separate with spaces)
+ع.م.أ (القاسم المشترك الأكبر)|GCD (greatest common divisor)
+م.م.أ (المضاعف المشترك الأصغر)|LCM (least common multiple)
+n (العدد الكلي)|n (total)
+r (المختار)|r (chosen)
+التوافيق C(n,r)|Combinations C(n,r)
+التباديل P(n,r)|Permutations P(n,r)
+أولي؟|Prime?
+نعم ✅|Yes ✅
+لا ❌|No ❌
+العوامل الأولية|Prime factors
+الأولي التالي|Next prime
+عدد الأرقام|How many numbers
+صحيحة|Integers
+عشرية|Decimals
+الأرقام|Numbers
+🎲 توليد|🎲 Generate
+مربع|Square
+طول الضلع|Side length
+المساحة|Area
+المحيط|Perimeter
+القطر|Diagonal / diameter
+مستطيل|Rectangle
+العرض|Width
+دائرة|Circle
+نصف القطر|Radius
+مثلث (قاعدة وارتفاع)|Triangle (base & height)
+القاعدة|Base
+الارتفاع|Height
+مثلث (3 أضلاع)|Triangle (3 sides)
+الضلع أ|Side A
+الضلع ب|Side B
+الضلع ج|Side C
+الأضلاع لا تكوّن مثلثاً|Sides do not form a triangle
+خطأ|Error
+متوازي أضلاع|Parallelogram
+الضلع المائل (اختياري)|Slanted side (optional)
+شبه منحرف|Trapezoid
+القاعدة 1|Base 1
+القاعدة 2|Base 2
+معين|Rhombus
+القطر 1|Diagonal 1
+القطر 2|Diagonal 2
+قطع ناقص|Ellipse
+نصف المحور الكبير|Semi-major axis
+نصف المحور الصغير|Semi-minor axis
+المحيط (تقريبي)|Perimeter (approx.)
+مضلع منتظم|Regular polygon
+عدد الأضلاع|Number of sides
+مكعب|Cube
+المساحة الكلية|Total surface area
+متوازي مستطيلات|Cuboid
+كرة|Sphere
+أسطوانة|Cylinder
+المساحة الجانبية|Lateral area
+مخروط|Cone
+الارتفاع المائل|Slant height
+هرم قاعدته مربعة|Square pyramid
+ضلع القاعدة|Base side
+م/ث²|m/s²
+g (الجاذبية)|g (gravity)
+قدم/ث²|ft/s²
+غال (Gal)|Gal
+درجة|Degree
+راديان|Radian
+غراد|Gradian
+دورة|Turn
+دقيقة قوسية|Arcminute
+ثانية قوسية|Arcsecond
+متر²|m²
+كم²|km²
+هكتار|Hectare
+دونم|Dunam
+فدان (acre)|Acre
+سم²|cm²
+ملم²|mm²
+قدم²|ft²
+إنش²|in²
+ياردة²|yd²
+ميل²|mi²
+مل|mL
+لتر|Liter
+ملعقة صغيرة|Teaspoon
+ملعقة كبيرة|Tablespoon
+كوب أمريكي|US cup
+كوب متري|Metric cup
+أوقية سائلة|Fluid ounce
+باينت|Pint
+كوارت|Quart
+بت|Bit
+بايت|Byte
+كيلوبايت KB|Kilobyte KB
+ميغابايت MB|Megabyte MB
+غيغابايت GB|Gigabyte GB
+تيرابايت TB|Terabyte TB
+بيتابايت PB|Petabyte PB
+جول|Joule
+كيلوجول|Kilojoule
+سعرة (cal)|Calorie (cal)
+كيلوسعرة (kcal)|Kilocalorie (kcal)
+واط ساعة|Watt-hour
+كيلوواط ساعة|Kilowatt-hour
+إلكترون فولت|Electronvolt
+نيوتن|Newton
+كيلونيوتن|Kilonewton
+داين|Dyne
+كغ قوة|Kilogram-force
+رطل قوة|Pound-force
+لتر / 100 كم|L / 100 km
+كم / لتر|km / L
+ميل / غالون (أمريكي)|mpg (US)
+ميل / غالون (بريطاني)|mpg (UK)
+متر|Meter
+كيلومتر|Kilometer
+سنتيمتر|Centimeter
+ملليمتر|Millimeter
+ميكرومتر|Micrometer
+ميل|Mile
+ياردة|Yard
+قدم|Foot
+إنش|Inch
+ميل بحري|Nautical mile
+الرقم|Number
+الأساس|Base
+ثنائي (2)|Binary (2)
+ثماني (8)|Octal (8)
+عشري (10)|Decimal (10)
+سداسي عشري (16)|Hexadecimal (16)
+رقم غير صالح لهذا الأساس|Invalid number for this base
+واط|Watt
+كيلوواط|Kilowatt
+ميغاواط|Megawatt
+حصان ميكانيكي|Mechanical horsepower
+حصان متري|Metric horsepower
+BTU/ساعة|BTU/hour
+سعرة/ثانية|cal/second
+باسكال|Pascal
+كيلوباسكال|Kilopascal
+ميغاباسكال|Megapascal
+بار|Bar
+ضغط جوي (atm)|Atmosphere (atm)
+تور|Torr
+نوع المدخل|Input type
+القطر الداخلي (مم)|Inner diameter (mm)
+المحيط (مم)|Circumference (mm)
+مقاس US|US size
+القطر (مم)|Diameter (mm)
+المحيط (مم) / مقاس EU|Circumference (mm) / EU size
+رقم عادي أو روماني|Number or Roman numeral
+رقم روماني غير صحيح|Invalid Roman numeral
+بالأرقام العادية|In regular numbers
+بالرومانية|In Roman numerals
+أدخل عدداً صحيحاً من 1 إلى 3999|Enter an integer from 1 to 3999
+النظام|System
+EU أوروبي|EU (European)
+UK بريطاني|UK (British)
+US رجالي|US men's
+US نسائي|US women's
+طول القدم (سم)|Foot length (cm)
+المقاس|Size
+القيم تقريبية وتختلف بين الشركات|Values are approximate and vary between brands
+م/ث|m/s
+كم/س|km/h
+ميل/س|mph
+عقدة|Knot
+قدم/ث|ft/s
+ماخ|Mach
+مئوية °C|Celsius °C
+فهرنهايت °F|Fahrenheit °F
+كلفن K|Kelvin K
+رانكين °R|Rankine °R
+ثانية|Second
+ملي ثانية|Millisecond
+دقيقة|Minute
+ساعة|Hour
+يوم|Day
+أسبوع|Week
+شهر (30.44 يوم)|Month (30.44 days)
+سنة|Year
+عقد|Decade
+نيوتن·متر|N·m
+كغ قوة·متر|kgf·m
+رطل قدم|lbf·ft
+رطل إنش|lbf·in
+كيلونيوتن·متر|kN·m
+م³|m³
+سم³|cm³
+غالون أمريكي|US gallon
+غالون بريطاني|UK gallon
+قدم³|ft³
+إنش³|in³
+لتر/ثانية|L/s
+لتر/دقيقة|L/min
+لتر/ساعة|L/h
+م³/ثانية|m³/s
+م³/ساعة|m³/h
+غالون/دقيقة|gal/min
+قدم³/ثانية|ft³/s
+كيلوغرام|Kilogram
+غرام|Gram
+ملليغرام|Milligram
+طن|Ton
+رطل|Pound
+أوقية|Ounce
+ستون|Stone
+قيراط|Carat
+دولار أمريكي|US dollar
+يورو|Euro
+جنيه إسترليني|British pound
+ريال سعودي|Saudi riyal
+درهم إماراتي|UAE dirham
+دينار كويتي|Kuwaiti dinar
+ريال قطري|Qatari riyal
+دينار بحريني|Bahraini dinar
+ريال عماني|Omani rial
+دينار أردني|Jordanian dinar
+جنيه مصري|Egyptian pound
+دينار عراقي|Iraqi dinar
+ليرة تركية|Turkish lira
+درهم مغربي|Moroccan dirham
+دينار جزائري|Algerian dinar
+دينار تونسي|Tunisian dinar
+ليرة لبنانية|Lebanese pound
+ليرة سورية|Syrian pound
+ين ياباني|Japanese yen
+يوان صيني|Chinese yuan
+روبية هندية|Indian rupee
+فرنك سويسري|Swiss franc
+دولار كندي|Canadian dollar
+دولار أسترالي|Australian dollar
+سعر المنتج 1|Product 1 price
+الكمية 1|Quantity 1
+سعر المنتج 2 (اختياري)|Product 2 price (optional)
+الكمية 2|Quantity 2
+سعر وحدة المنتج 1|Product 1 unit price
+سعر وحدة المنتج 2|Product 2 unit price
+الأوفر|Better deal
+متساويان|Equal
+المنتج 1 ✅|Product 1 ✅
+المنتج 2 ✅|Product 2 ✅
+إضافة الضريبة|Add tax
+المبلغ قبل الضريبة|Amount before tax
+نسبة الضريبة %|Tax rate %
+الضريبة|Tax
+الإجمالي|Total
+استخراج الضريبة من الإجمالي|Extract tax from total
+المبلغ شامل الضريبة|Amount including tax
+الفاتورة|Bill
+الإكرامية %|Tip %
+عدد الأشخاص|Number of people
+حصة كل شخص|Per person
+مبلغ القرض|Loan amount
+الفائدة السنوية %|Annual interest %
+المدة|Term / duration
+وحدة المدة|Term unit
+سنوات|Years
+شهور|Months
+القسط الشهري|Monthly payment
+إجمالي المدفوع|Total paid
+إجمالي الفائدة|Total interest
+بسيطة|Simple
+مركبة سنوياً|Compound (yearly)
+مركبة شهرياً|Compound (monthly)
+مبلغ الإيداع|Deposit amount
+أيام|Days
+القيمة النهائية|Final value
+متري (سم، كغ)|Metric (cm, kg)
+الارتفاع (سم)|Height (cm)
+الوزن (كغ)|Weight (kg)
+لشخص بالغ يبلغ 18 عاماً فأكثر|For adults aged 18 and over
+التصنيف|Category
+نحافة|Underweight
+وزن طبيعي|Normal weight
+زيادة وزن|Overweight
+سمنة|Obese
+إمبراطوري (إنش، رطل)|Imperial (in, lb)
+الارتفاع (إنش)|Height (in)
+الوزن (رطل)|Weight (lb)
+العمر|Age
+الجنس|Sex
+ذكر|Male
+أنثى|Female
+نمط الحياة|Lifestyle
+خامل (بلا رياضة)|Sedentary (no exercise)
+نشاط خفيف|Light activity
+نشاط متوسط|Moderate activity
+نشيط|Active
+نشيط جداً|Very active
+معدل الحرق الأساسي (kcal)|Basal metabolic rate (kcal)
+السعرات المحروقة يومياً (kcal)|Calories burned daily (kcal)
+معادلة Mifflin-St Jeor|Mifflin-St Jeor equation
+حسب مؤشر الكتلة|By BMI
+نسبة الدهون %|Body fat %
+حسب محيط الجسم (البحرية)|By body measurements (Navy)
+محيط الرقبة (سم)|Neck circumference (cm)
+محيط الخصر (سم)|Waist circumference (cm)
+محيط الورك (سم) — للإناث|Hip circumference (cm) — females
+تاريخ الميلاد|Date of birth
+العمر الحالي|Current age
+مجموع الأيام|Total days
+عيد الميلاد القادم|Next birthday
+متبقٍ (يوم)|Days remaining
+التاريخ في المستقبل|Date is in the future
+التاريخ المبدئي|Start date
+جمع (+)|Add (+)
+طرح (−)|Subtract (−)
+المقدار|Amount
+الوحدة|Unit
+أسابيع|Weeks
+ساعات|Hours
+دقائق|Minutes
+إضافة أو طرح فترة زمنية من التاريخ الأولي|Add or subtract a period from the start date
+تاريخ البدء|Start date
+تاريخ الانتهاء|End date
+مسافة|Distance
+وحدة المسافة|Distance unit
+الاستهلاك|Consumption
+وحدة الاستهلاك|Consumption unit
+كمية الوقود|Fuel quantity
+وحدة الكمية|Quantity unit
+غالون (أمريكي)|Gallon (US)
+المسافة|Distance
+أدخل قيمتين لحساب القيمة الثالثة|Enter two values to compute the third
+الجهد|Voltage
+وحدة الجهد|Voltage unit
+فولت|Volt
+ملي فولت|Millivolt
+كيلو فولت|Kilovolt
+التيار|Current
+وحدة التيار|Current unit
+أمبير|Ampere
+ملي أمبير|Milliampere
+المقاومة|Resistance
+وحدة المقاومة|Resistance unit
+أوم|Ohm
+كيلو أوم|Kilohm
+ميغا أوم|Megohm
+وحدة القدرة|Power unit
+ملي واط|Milliwatt
+كيلو واط|Kilowatt
+أدخل قيمتين لحساب القيمتين الأخريين|Enter two values to compute the other two
+🖥 الحاسوب (Chrome / Edge): اضغط أيقونة التثبيت ⊕ في شريط العنوان، أو القائمة ⋮ ← «تثبيت التطبيق».|🖥 Desktop (Chrome / Edge): click the install icon ⊕ in the address bar, or menu ⋮ → "Install app".
+🤖 أندرويد (Chrome): القائمة ⋮ ← «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».|🤖 Android (Chrome): menu ⋮ → "Install app" or "Add to Home screen".
+🍎 آيفون / آيباد (Safari): زر المشاركة ⬆ ← «إضافة إلى الشاشة الرئيسية».|🍎 iPhone / iPad (Safari): Share button ⬆ → "Add to Home Screen".
+⚠️ يلزم فتح التطبيق من رابط https أو من localhost (انظر README) كي يظهر التثبيت.|⚠️ Open the app from an https link or localhost (see README) for installation to appear.`.split('\n').forEach(l=>{const i=l.indexOf('|');i>0&&(D[l.slice(0,i)]=l.slice(i+1))});
+const PX=[[/^(\d+) سنة، (\d+) شهر، (\d+) يوم$/,'$1 years, $2 months, $3 days'],[/^الأساس (\d+)$/,'Base $1'],[/^(\d)\. اختر الواجهة$/,'$1. Choose interface'],[/^(\d)\. اختر السمة$/,'$1. Choose theme']];
+const cv=s=>{const t=s.trim();if(!t)return s;let o=D[t];if(o==null)for(const[r,x]of PX)if(r.test(t)){o=t.replace(r,x);break}return o==null?s:s.replace(t,o)},L=s=>AR?s:cv(s),done=new WeakMap();
+function tr(n){if(n.nodeType==3){if(done.get(n)===n.data)return;const o=cv(n.data);if(o!==n.data)n.data=o;done.set(n,n.data)}else n.childNodes&&n.childNodes.forEach(tr)}
+if(!AR)new MutationObserver(ms=>ms.forEach(m=>{m.addedNodes.forEach(tr);m.type=='characterData'&&tr(m.target)})).observe(A,{childList:true,subtree:true,characterData:true});
+D['الرموز العلمية']='Scientific Symbols';D['أشكال إضافية (مساحة ومحيط)']='More shapes (area & perimeter)';D['حجم الخزان والسوائل']='Tank volume & liquids';D['السوائل']='Liquids';D['صندوق أدوات المطوّر']='Developer toolbox';D['طن أمريكي (short)']='US ton (short)';D['طن بريطاني (long)']='UK ton (long)';D['ميكروغرام']='Microgram';D['أوقية تروي']='Troy ounce';D['غرين (grain)']='Grain';D['قطاع دائري']='Circular sector';D['حلقة دائرية']='Annulus';D['نصف دائرة']='Semicircle';D['مثلث قائم']='Right triangle';D['خزان أسطواني']='Cylindrical tank';D['خزان مستطيل']='Rectangular tank';D['وزن السائل']='Liquid weight';
+ST.g('ob',0)?calc():onb();
+try{ensureConsoleUI()}catch(e){}
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(e=>pushErr('warn','SW register: '+e));
+
+</script></body></html>
