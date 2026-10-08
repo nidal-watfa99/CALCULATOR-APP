@@ -1,9 +1,6 @@
 name: Unzip
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '**.zip'
 permissions:
   contents: write
 jobs:
@@ -11,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
       - name: Unzip files
         run: |
           for f in *.zip; do
